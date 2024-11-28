@@ -6,8 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.account.AccountFragment">
 
-    <!-- Button to trigger sign-out -->
-
     <TextView
         android:id="@+id/text_account"
         android:layout_width="match_parent"

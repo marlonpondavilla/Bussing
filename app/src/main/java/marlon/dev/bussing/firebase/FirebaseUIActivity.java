@@ -42,7 +42,6 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 }
         );
 
-        // Always show the sign-in UI regardless of the user's authentication state
         initializeSignIn();
     }
 
@@ -50,21 +49,20 @@ public class FirebaseUIActivity extends AppCompatActivity {
     private void initializeSignIn() {
         // Set up the authentication providers for the sign-in process
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build(), // Google Sign-In provider
-                new AuthUI.IdpConfig.EmailBuilder().build(),  // Email/Password provider
-                new AuthUI.IdpConfig.PhoneBuilder().build()   // Phone authentication provider
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.PhoneBuilder().build()
         );
 
         // Build the sign-in intent
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
-                .setAvailableProviders(providers)  // Available sign-in providers
-                .setIsSmartLockEnabled(false)      // Disable Smart Lock to force account selection
-                .setLogo(R.drawable.ic_launcher_background)   // Optional: Add a custom logo
-                .setTheme(R.style.Theme_Bussing)       // Optional: Use custom theme
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
+                .setLogo(R.drawable.ic_launcher_background)
+                .setTheme(R.style.Theme_Bussing)
                 .build();
 
-        // Launch the sign-in intent
         signInLauncher.launch(signInIntent);
     }
 
@@ -73,19 +71,16 @@ public class FirebaseUIActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                // User signed in successfully, navigate to MainActivity
                 navigateToMainActivity();
             }
         } else {
-            // Handle sign-in failure
             Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Navigate to MainActivity
     private void navigateToMainActivity() {
         Intent intent = new Intent(FirebaseUIActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();  // Finish FirebaseUIActivity to prevent going back to it
+        finish();
     }
 }

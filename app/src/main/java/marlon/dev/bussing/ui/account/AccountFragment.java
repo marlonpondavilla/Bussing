@@ -61,9 +61,7 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        // Sign-out button click listener
         signOutButton.setOnClickListener(v -> {
-            // Sign out from Firebase
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(getContext(), "Signed out", Toast.LENGTH_SHORT).show();
 
@@ -96,10 +94,9 @@ public class AccountFragment extends Fragment {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)  // Disable Smart Lock to prevent auto sign-in
+                .setIsSmartLockEnabled(false)
                 .build();
 
-        // Launch the FirebaseUI sign-in flow
         signInLauncher.launch(signInIntent);
     }
 
@@ -108,13 +105,11 @@ public class AccountFragment extends Fragment {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                // User signed in successfully, navigate to MainActivity
                 Intent intent = new Intent(getContext(), marlon.dev.bussing.firebase.FirebaseUIActivity.class);
                 startActivity(intent);
-                getActivity().finish();  // Finish the current activity to prevent going back
+                getActivity().finish();
             }
         } else {
-            // Handle sign-in failure
             Toast.makeText(getContext(), "Sign-in failed", Toast.LENGTH_SHORT).show();
         }
     }
