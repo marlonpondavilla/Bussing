@@ -71,6 +71,9 @@ public class FirebaseUIActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
+                //send these to db and fetch to account fragment
+                String userName = user.getDisplayName();
+                String userUiD = user.getUid();
                 navigateToMainActivity();
             }
         } else {

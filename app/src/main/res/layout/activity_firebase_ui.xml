@@ -7,5 +7,4 @@
     tools:context=".firebase.FirebaseUIActivity">
 
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
