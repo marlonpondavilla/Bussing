@@ -15,6 +15,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,23 +44,26 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 }
         );
 
-        initializeSignIn();
+        // Check if the user is already signed in, and navigate accordingly
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            navigateToMainActivity();
+        } else {
+            initializeSignIn();
+        }
     }
 
     // Start the sign-in process
     private void initializeSignIn() {
-        // Set up the authentication providers for the sign-in process
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.PhoneBuilder().build()
         );
 
-        // Build the sign-in intent
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)
+                .setIsSmartLockEnabled(true)
                 .setLogo(R.drawable.ic_launcher_background)
                 .setTheme(R.style.Theme_Bussing)
                 .build();
@@ -71,7 +76,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                //send these to db and fetch to account fragment
+                // Send these to the DB and fetch to account fragment
                 String userName = user.getDisplayName();
                 String userUiD = user.getUid();
                 navigateToMainActivity();
@@ -81,9 +86,26 @@ public class FirebaseUIActivity extends AppCompatActivity {
         }
     }
 
+    // Simplified method to navigate to the MainActivity
     private void navigateToMainActivity() {
         Intent intent = new Intent(FirebaseUIActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        finish();  // End this activity to prevent back navigation
+    }
+
+    // Sign-out button clicked
+    public void signOutBtnClicked() {
+        signOut();
+    }
+
+    // Handle sign-out process
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();  // Clear the current user's session
+
+        // Optionally, clear additional session information if needed
+        // FirebaseAuth.getInstance().useAppLanguage();
+
+        // After sign-out, navigate to MainActivity
+        navigateToMainActivity();
     }
 }

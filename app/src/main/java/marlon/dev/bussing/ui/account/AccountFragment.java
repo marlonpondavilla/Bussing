@@ -46,8 +46,8 @@ public class AccountFragment extends Fragment {
         View root = binding.getRoot();
 
         final Button signOutButton = binding.signOutButton;
+        final Button switchAccountButton = binding.switchAccountButton;
 
-        // Observe the sign-in status to update UI
         accountViewModel.isSignedIn().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isSignedIn) {
@@ -62,10 +62,13 @@ public class AccountFragment extends Fragment {
         });
 
         signOutButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
+            FirebaseAuth.getInstance().signOut();  // Sign out the user
             Toast.makeText(getContext(), "Signed out", Toast.LENGTH_SHORT).show();
 
-            // After sign-out, show the FirebaseUI sign-in screen
+            startFirebaseUISignIn();
+        });
+
+        switchAccountButton.setOnClickListener(view -> {
             startFirebaseUISignIn();
         });
 
@@ -86,18 +89,23 @@ public class AccountFragment extends Fragment {
 
     // Start the FirebaseUI sign-in flow
     private void startFirebaseUISignIn() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build()
-        );
+        // Check if the user is signed out
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                    new AuthUI.IdpConfig.PhoneBuilder().build()
+            );
 
-        // Build the sign-in intent for FirebaseUI
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)
-                .build();
+            // Build the sign-in intent for FirebaseUI
+            Intent signInIntent = AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .setIsSmartLockEnabled(false)
+                    .build();
 
-        signInLauncher.launch(signInIntent);
+            signInLauncher.launch(signInIntent);
+        }
     }
 
     // Handle the result from FirebaseUI sign-in
