@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_ticket" />
 
     <fragment
+        android:id="@+id/navigation_location"
+        android:name="marlon.dev.bussing.ui.location.LocationFragment"
+        android:label="Location"
+        tools:layout="@layout/fragment_location" />
+
+    <fragment
         android:id="@+id/navigation_history"
         android:name="marlon.dev.bussing.ui.history.HistoryFragment"
         android:label="History"
@@ -26,6 +32,6 @@
     <fragment
         android:id="@+id/navigation_account"
         android:name="marlon.dev.bussing.ui.account.AccountFragment"
-        android:label="History"
+        android:label="Account"
         tools:layout="@layout/fragment_account" />
 </navigation>
