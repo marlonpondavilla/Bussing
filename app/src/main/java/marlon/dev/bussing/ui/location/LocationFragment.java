@@ -1,22 +1,19 @@
 package marlon.dev.bussing.ui.location;
 
 import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-
+import marlon.dev.bussing.MapsActivity;
 import marlon.dev.bussing.R;
-import marlon.dev.bussing.databinding.FragmentHistoryBinding;
 import marlon.dev.bussing.databinding.FragmentLocationBinding;
-import marlon.dev.bussing.ui.history.HistoryFragment;
 import marlon.dev.bussing.ui.history.HistoryViewModel;
 
 public class LocationFragment extends Fragment {
@@ -33,11 +30,19 @@ public class LocationFragment extends Fragment {
         LocationViewModel locationViewModel =
                 new ViewModelProvider(this).get(LocationViewModel.class);
 
-         binding = FragmentLocationBinding.inflate(inflater, container, false);
+        // Inflate the layout
+        binding = FragmentLocationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Button openMapsButton = binding.getRoot().findViewById(R.id.button_open_maps);
+        openMapsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), marlon.dev.bussing.MapsActivity.class);
+            startActivity(intent);
+        });
 
         final TextView textView = binding.textLocation;
         locationViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 
@@ -46,5 +51,4 @@ public class LocationFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

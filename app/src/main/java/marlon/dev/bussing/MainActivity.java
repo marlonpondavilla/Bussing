@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import marlon.dev.bussing.databinding.ActivityMainBinding;
+import marlon.dev.bussing.ui.history.HistoryViewModel;
 
 public class MainActivity extends AppCompatActivity {
 

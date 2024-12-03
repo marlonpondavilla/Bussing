@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")  // Ensure this is applied
+    id("com.google.gms.google-services") 
 }
 
 android {
@@ -50,18 +50,17 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Remove these explicit versions if you're using the Firebase BOM
-    implementation ("androidx.appcompat:appcompat:1.7.0")
-    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    // Google Play Services Maps Dependency
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
 
     // Firebase UI and Authentication
     implementation ("com.firebaseui:firebase-ui-auth:8.0.0")
-    implementation ("com.google.firebase:firebase-auth")  // Use BOM to manage versions
-    implementation ("com.google.firebase:firebase-analytics")  // Optional, for Firebase Analytics
+    implementation ("com.google.firebase:firebase-auth")
+    implementation ("com.google.firebase:firebase-analytics")
 
     // Firebase BOM (Bill of Materials)
-    implementation (platform("com.google.firebase:firebase-bom:33.6.0"))  // BOM automatically manages versions of Firebase libraries
+    implementation (platform("com.google.firebase:firebase-bom:33.6.0"))
 
     // Add Google Play Services Auth for Google Sign-In
-    implementation ("com.google.android.gms:play-services-auth:20.1.0")  // Ensure this is added for Google Sign-In support
+    implementation ("com.google.android.gms:play-services-auth:20.1.0")
 }
