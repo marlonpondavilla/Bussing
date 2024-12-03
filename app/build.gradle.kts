@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")  // Ensure this is applied
 }
 
 android {
@@ -26,10 +26,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     buildFeatures {
         viewBinding = true
     }
@@ -48,16 +50,18 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation ("androidx.appcompat:appcompat:1.7.0") // AppCompat library
-    implementation ("androidx.constraintlayout:constraintlayout:2.1.4") // ConstraintLayout
-    implementation ("com.firebaseui:firebase-ui-auth:8.0.0") // Firebase UI Auth
-    implementation ("com.google.firebase:firebase-auth:21.1.0") // Firebase Authentication
-    implementation ("com.google.firebase:firebase-analytics:21.1.0") // Firebase Analytics (optional)
+    // Remove these explicit versions if you're using the Firebase BOM
+    implementation ("androidx.appcompat:appcompat:1.7.0")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // Firebase UI and Authentication
+    implementation ("com.firebaseui:firebase-ui-auth:8.0.0")
+    implementation ("com.google.firebase:firebase-auth")  // Use BOM to manage versions
+    implementation ("com.google.firebase:firebase-analytics")  // Optional, for Firebase Analytics
 
     // Firebase BOM (Bill of Materials)
-    implementation (platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation (platform("com.google.firebase:firebase-bom:33.6.0"))  // BOM automatically manages versions of Firebase libraries
 
-    // Firebase SDK
-    implementation ("com.google.firebase:firebase-auth")
-
+    // Add Google Play Services Auth for Google Sign-In
+    implementation ("com.google.android.gms:play-services-auth:20.1.0")  // Ensure this is added for Google Sign-In support
 }

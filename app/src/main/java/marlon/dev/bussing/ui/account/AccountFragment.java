@@ -118,7 +118,7 @@ public class AccountFragment extends Fragment {
                 getActivity().finish();
             }
         } else {
-            Toast.makeText(getContext(), "Sign-in failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Sign-in failed, account fragment", Toast.LENGTH_SHORT).show();
         }
     }
 }

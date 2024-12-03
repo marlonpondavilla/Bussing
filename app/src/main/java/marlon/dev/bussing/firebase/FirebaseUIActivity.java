@@ -82,7 +82,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 navigateToMainActivity();
             }
         } else {
-            Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sign-in failed, firebase activity", Toast.LENGTH_SHORT).show();
         }
     }
 
