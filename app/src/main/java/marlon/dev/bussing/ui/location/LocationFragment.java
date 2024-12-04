@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import marlon.dev.bussing.MapsActivity;
 import marlon.dev.bussing.R;
 import marlon.dev.bussing.databinding.FragmentLocationBinding;
@@ -36,6 +38,7 @@ public class LocationFragment extends Fragment {
 
         Button openMapsButton = binding.getRoot().findViewById(R.id.button_open_maps);
         openMapsButton.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Opening Maps...", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(requireActivity(), marlon.dev.bussing.MapsActivity.class);
             startActivity(intent);
         });
