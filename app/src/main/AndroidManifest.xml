@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="marlon.dev.bussing">
+    <!-- Permissions for internet access (needed by Firebase) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -13,46 +16,49 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bussing"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.splash_welcome.WelcomePage"
+            android:exported="false" />
 
-        <!-- MainActivity is the entry point of your app -->
+        <!--starting point of the app-->
+        <activity
+            android:name=".ui.splash_welcome.SplashScreen"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:label="@string/app_name">
-
-        </activity>
+            android:label="@string/app_name" />
 
         <!-- Firebase UI sign-in activity -->
-<!--        <activity-->
-<!--            android:name=".firebase.FirebaseUIActivity"-->
-<!--            android:exported="true"-->
-<!--            android:label="@string/app_name"-->
-<!--            android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <!-- <activity -->
+        <!-- android:name=".firebase.FirebaseUIActivity" -->
+        <!-- android:exported="true" -->
+        <!-- android:label="@string/app_name" -->
+        <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
 
         <activity
-            android:name="marlon.dev.bussing.firebase.FirebaseUIActivity"
-            android:exported="true"
+            android:name=".firebase.FirebaseUIActivity"
+            android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-
     </application>
-
-    <!-- Permissions for internet access (needed by Firebase) -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
