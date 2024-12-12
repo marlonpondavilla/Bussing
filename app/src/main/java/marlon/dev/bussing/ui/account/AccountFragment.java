@@ -15,8 +15,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
@@ -41,6 +43,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -79,7 +82,9 @@ public class AccountFragment extends Fragment {
         );
 
         return root;
+
     }
+
 
     @Override
     public void onDestroyView() {
