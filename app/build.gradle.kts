@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.legacy.support.v4)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -64,4 +65,9 @@ dependencies {
 
     // Add Google Play Services Auth for Google Sign-In
     implementation ("com.google.android.gms:play-services-auth:20.1.0")  // Ensure this is added for Google Sign-In support
+
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")  // Google Maps SDK for Android
+    implementation ("com.google.android.gms:play-services-location:18.0.0") // For location-related features (optional)
+    implementation ("androidx.appcompat:appcompat:1.3.1") // Optional, if using AppCompatActivity
+    // Other necessary dependencies...
 }

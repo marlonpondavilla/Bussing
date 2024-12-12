@@ -48,6 +48,12 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".MapsActivity"
+            android:exported="false"
+            android:label="Bussing"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
 
     </application>
 

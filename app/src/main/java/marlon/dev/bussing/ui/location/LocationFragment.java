@@ -39,7 +39,7 @@ public class LocationFragment extends Fragment {
         Button openMapsButton = binding.getRoot().findViewById(R.id.button_open_maps);
         openMapsButton.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Opening Maps...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(requireActivity(), marlon.dev.bussing.MapsActivity.class);
+            Intent intent = new Intent(requireActivity(),marlon.dev.bussing.MapsActivity.class);
             startActivity(intent);
         });
 
