@@ -65,4 +65,7 @@ dependencies {
 
     // Add Google Play Services Auth for Google Sign-In
     implementation ("com.google.android.gms:play-services-auth:20.1.0")  // Ensure this is added for Google Sign-In support
+
+    // Material Component latest version
+    implementation ("com.google.android.material:material:1.9.0")
 }

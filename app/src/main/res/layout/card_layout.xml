@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp"
+    app:contentPadding="10dp"
+    android:id="@+id/cardView"
+    android:backgroundTint="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/busNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="BUS 01"
+                        android:fontFamily="@font/nunito_bold"
+                        android:textSize="16dp"
+                        android:textColor="#1e2336"
+                        android:gravity="center"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="290dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center"
+                            android:gravity="end">
+
+                            <TextView
+                                android:id="@+id/fromLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="Bulakan"
+                                android:textColor="#133AC1"
+                                android:textSize="16dp"
+                                android:fontFamily="@font/nunito_bold"
+                                android:gravity="center" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/arrow_right_solid"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="6dp"/>
+
+                            <TextView
+                                android:id="@+id/toWhereLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="Malolos"
+                                android:textSize="16dp"
+                                android:textColor="#133AC1"
+                                android:fontFamily="@font/nunito_bold"
+                                android:gravity="center"
+                                android:layout_marginLeft="6dp"/>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/busCompany"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/card_button"
+                        android:backgroundTint="#c9c9c9"
+                        android:layout_gravity="center"/>
+
+                    <LinearLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Current Bus Location"
+                            android:textSize="20dp"
+                            android:textColor="#595959"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/nunito_bold"/>
+
+                        <TextView
+                            android:id="@+id/currentLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Guiginto, Bulacan"
+                            android:textSize="16dp"
+                            android:textColor="#03c03c"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/nunito_semibold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Departure Time"
+                            android:textSize="20dp"
+                            android:layout_gravity="center"
+                            android:textColor="#595959"
+                            android:layout_marginTop="14dp"
+                            android:fontFamily="@font/nunito_bold"/>
+
+                        <TextView
+                            android:id="@+id/departureTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="09:30"
+                            android:textSize="16dp"
+                            android:textColor="#1D9793"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/nunito_semibold"/>
+
+                    </LinearLayout>
+
+
+                    <!--wala pa ko id dito lon wala pako maisip na pwede lagay-->
+                    <ImageView
+                        android:id="@+id/dummyId"
+                        android:backgroundTint="#c9c9c9"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/card_button"
+                        android:layout_gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/viewMaps"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="View Maps"
+                    android:textColor="#133AC1"
+                    android:background="@android:color/transparent"
+                    />
+
+            </LinearLayout>
+
+</androidx.cardview.widget.CardView>

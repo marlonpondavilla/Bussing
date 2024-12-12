@@ -14,7 +14,6 @@ public class AccountViewModel extends ViewModel {
 
     public AccountViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Hello user");
 
         // Initialize the sign-in state
         isSignedIn = new MutableLiveData<>();

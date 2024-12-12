@@ -13,7 +13,7 @@
         android:id="@+id/imageIllustration"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="90dp"
         android:src="@drawable/welcomepage_illustration" />
 
     <LinearLayout
@@ -66,16 +66,20 @@
         app:backgroundTint="#384246"
         android:fontFamily="@font/nunito_semibold"
         android:textAllCaps="false"
+        android:layout_marginBottom="0dp"
         />
 
-    <TextView
+    <Button
         android:id="@+id/adminHyperLink"
-        android:layout_width="match_parent"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:text="Admin?"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="2dp"
         android:textColor="#7d7d7d"
-        android:fontFamily="@font/nunito_semibold"/>
+        android:textSize="14dp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/nunito_semibold"
+        android:background="@android:color/transparent" />
 
 </LinearLayout>
