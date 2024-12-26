@@ -3,11 +3,13 @@ package marlon.dev.bussing.ui.home;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +21,15 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.imageview.ShapeableImageView;
+
 import marlon.dev.bussing.ui.account.AccountFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import marlon.dev.bussing.R;
 
@@ -30,6 +38,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<CardLists> cardLists = new ArrayList<>();
     private RecyclerView recyclerView;
     private CardAdapter cardAdapter;
+
+    private ShapeableImageView appBarProfile;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,16 +62,20 @@ public class HomeFragment extends Fragment {
         cardAdapter = new CardAdapter(getContext(), cardLists);
         recyclerView.setAdapter(cardAdapter);
 
-        // Find the clickable FrameLayout
-        /*FrameLayout frameLayout = view.findViewById(R.id.frameLayout);
-        frameLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Log or debug if this event is being triggered
-                Log.d("HomeFragment", "AppBar clicked, navigating to AccountFragment");
-                navigateToAccountFragment();
-            }
-        });*/
+        // Find the TextView for displaying the current date
+        TextView dateTextView = view.findViewById(R.id.dateTextView);
+
+        //get the current date in desired format
+        String currentDate = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault()).format(new Date());
+
+        // Set the current date in the TextView
+        dateTextView.setText(currentDate);
+
+        // Initialize ImageView for the app bar profile image
+        appBarProfile = view.findViewById(R.id.appBarProfile);
+
+        // Set up a click listener for the profile image to show the dropdown menu
+        appBarProfile.setOnClickListener(v -> showPopupMenu(v));
 
         return view;
     }
@@ -69,24 +83,44 @@ public class HomeFragment extends Fragment {
 
     // Method to add multiple card items to cardLists
     private void cardData() {
-        cardLists.add(new CardLists("BUS01", "Bulacan", "Valenzuela", R.drawable.bus_img, "Obando", "09:30"));
-        cardLists.add(new CardLists("BUS02", "Bocaue", "Trinoma", R.drawable.bus_img, "Meycauyan", "13:45"));
-        cardLists.add(new CardLists("BUS03", "Quezon City", "Cubao", R.drawable.bus_img, "Caloocan", "18:00"));
-        cardLists.add(new CardLists("BUS04", "Taguig", "BGC", R.drawable.bus_img, "Pasig", "12:25"));
-        cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_img, "Makati", "10:30"));
+        cardLists.add(new CardLists("BUS01", "Bulacan", "Valenzuela", R.drawable.bus_front, "Obando", "09:30"));
+        cardLists.add(new CardLists("BUS02", "Bocaue", "Trinoma", R.drawable.bus_front, "Meycauyan", "13:45"));
+        cardLists.add(new CardLists("BUS03", "Quezon City", "Cubao", R.drawable.bus_front, "Caloocan", "18:00"));
+        cardLists.add(new CardLists("BUS04", "Taguig", "BGC", R.drawable.bus_front, "Pasig", "12:25"));
+        cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_front, "Makati", "10:30"));
+    }
+
+    // Method to show the PopupMenu
+    private void showPopupMenu(View view) {
+        // Create a PopupMenu and link it to the view (the profile image)
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+
+        // Inflate the menu from a resource file (we'll define the menu XML next)
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, popupMenu.getMenu());
+
+        // Set a listener to handle item clicks
+        popupMenu.setOnMenuItemClickListener(item -> {
+            // Handle the "Check Account" menu item click
+            if (item.getItemId() == R.id.check_account) {
+                navigateToAccountFragment();
+                return true;
+            }
+            return false;
+        });
+
+        // Show the PopupMenu
+        popupMenu.show();
     }
 
     // Method to navigate to the AccountFragment
-    /*private void navigateToAccountFragment() {
+    private void navigateToAccountFragment() {
         AccountFragment accountFragment = new AccountFragment();
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-
-        //target fragment
         fragmentTransaction.replace(R.id.fragment_container, accountFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }*/
-
+    }
 
     // Remove binding references, since we're not using View Binding here
     @Override

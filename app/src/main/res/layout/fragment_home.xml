@@ -27,6 +27,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="20dp"
+                android:text="Current Date"
+                android:textSize="16dp"
+                android:fontFamily="@font/nunito_semibold"
+                android:textColor="#1D9793"/>
+
             <!-- RecyclerView for the cards -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"

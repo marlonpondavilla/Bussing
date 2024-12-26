@@ -15,4 +15,19 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">40dp</item>
     </style>
+
+    <style name="CustomSpinnerStyle">
+        <item name="android:popupBackground">#000</item>
+        <item name="android:dropDownVerticalOffset">50dp</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:dropDownHorizontalOffset">100dp</item>
+    </style>
+
+    <style name="PopUpScreenTheme">
+        <item name="android:popupBackground">#f9f9f9</item>
+    </style>
+
+    <style name="FirebaseAuthTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
 </resources>

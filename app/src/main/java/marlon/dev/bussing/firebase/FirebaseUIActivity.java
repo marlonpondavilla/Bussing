@@ -89,8 +89,10 @@ public class FirebaseUIActivity extends AppCompatActivity {
     // Simplified method to navigate to the MainActivity
     private void navigateToMainActivity() {
         Intent intent = new Intent(FirebaseUIActivity.this, MainActivity.class);
+        // Add flags to clear any previous activities from the back stack and prevent returning to this activity
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();  // End this activity to prevent back navigation
+        finish();
     }
 
     // Sign-out button clicked
@@ -101,9 +103,6 @@ public class FirebaseUIActivity extends AppCompatActivity {
     // Handle sign-out process
     public void signOut() {
         FirebaseAuth.getInstance().signOut();  // Clear the current user's session
-
-        // Optionally, clear additional session information if needed
-        // FirebaseAuth.getInstance().useAppLanguage();
 
         // After sign-out, navigate to MainActivity
         navigateToMainActivity();

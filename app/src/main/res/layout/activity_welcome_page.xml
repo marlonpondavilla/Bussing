@@ -69,17 +69,4 @@
         android:layout_marginBottom="0dp"
         />
 
-    <Button
-        android:id="@+id/adminHyperLink"
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:text="Admin?"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="#7d7d7d"
-        android:textSize="14dp"
-        android:textAllCaps="false"
-        android:fontFamily="@font/nunito_semibold"
-        android:background="@android:color/transparent" />
-
 </LinearLayout>

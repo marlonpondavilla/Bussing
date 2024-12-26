@@ -1,37 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.location.LocationFragment">
 
-    <TextView
-        android:id="@+id/text_location"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/maps2"
+        android:scaleType="matrix"
+        android:layout_gravity="center"/>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        android:layout_marginHorizontal="24dp"
+        app:cardCornerRadius="24dp"
+        android:layout_marginTop="40dp"
+        app:contentPadding="10dp"
+        app:cardElevation="6dp">
 
-    <Button
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See the current bus locations"
+            android:layout_gravity="center"
+            android:fontFamily="@font/nunito_bold"
+            android:textColor="#595959"
+            android:textSize="18dp"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_open_maps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="176dp"
-        android:width="150dp"
-        android:height="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="300dp"
         android:text="Open Maps"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAllCaps="false"
+        android:fontFamily="@font/nunito_bold"
+        android:textSize="14dp"
+        android:textColor="#f9f9f9"
+        android:gravity="center"
+        android:backgroundTint="#384246"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/map_location"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconSize="24dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
+
+<!--    android:id="@+id/text_location"-->
+
+<!--    android:id="@+id/button_open_maps"
+android:textSize="18dp"
+            android:textColor="#f9f9f9"
+            app:cornerRadius="10dp"
+            app:backgroundTint="#384246"
+            android:fontFamily="@font/nunito_semibold"
+            android:textAllCaps="false"-->

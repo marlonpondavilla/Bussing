@@ -78,7 +78,7 @@
         android:orientation="vertical"
         android:layout_marginTop="200dp"> <!-- Adjusted marginTop -->
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/signOutButton"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -93,10 +93,10 @@
             android:fontFamily="@font/nunito_bold"
             android:textSize="14sp"
             android:drawableRight="@drawable/chevron"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackground"
             />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/switchAccountButton"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -111,7 +111,7 @@
             android:fontFamily="@font/nunito_bold"
             android:textSize="14sp"
             android:drawableRight="@drawable/chevron"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackground"
             />
 
     </LinearLayout>
@@ -120,7 +120,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="275dp"
+        android:layout_marginTop="272dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="#87A0F8" />

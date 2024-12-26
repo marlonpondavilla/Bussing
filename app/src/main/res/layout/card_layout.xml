@@ -157,12 +157,12 @@
 
                 <Button
                     android:id="@+id/viewMaps"
-                    android:layout_width="260dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="View Maps"
+                    android:text="Status"
                     android:textColor="#133AC1"
-                    android:background="@android:color/transparent"
+                    android:background="?attr/selectableItemBackground"
                     />
 
             </LinearLayout>
