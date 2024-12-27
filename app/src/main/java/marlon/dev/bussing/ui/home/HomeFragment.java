@@ -1,6 +1,7 @@
 package marlon.dev.bussing.ui.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import marlon.dev.bussing.ui.account.AccountFragment;
@@ -92,10 +94,10 @@ public class HomeFragment extends Fragment {
 
     // Method to show the PopupMenu
     private void showPopupMenu(View view) {
-        // Create a PopupMenu and link it to the view (the profile image)
+        // Create a PopupMenu and link it to the profile
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
 
-        // Inflate the menu from a resource file (we'll define the menu XML next)
+        // Inflate the menu from a resource file
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.profile_menu, popupMenu.getMenu());
 
@@ -113,14 +115,27 @@ public class HomeFragment extends Fragment {
         popupMenu.show();
     }
 
-    // Method to navigate to the AccountFragment
     private void navigateToAccountFragment() {
+        // Using requireActivity() to ensure the activity is available
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+
+        // Replace the current fragment with AccountFragment
         AccountFragment accountFragment = new AccountFragment();
-        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, accountFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        transaction.replace(R.id.nav_host_fragment_activity_main, accountFragment);
+
+        // Allows the user to navigate back
+        transaction.addToBackStack(null);
+
+        // Commit the transaction to perform the navigation
+        transaction.commit();
+
+        // Update the Bottom Navigation to reflect the selected fragment
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_account);
+        }
     }
+
 
     // Remove binding references, since we're not using View Binding here
     @Override
