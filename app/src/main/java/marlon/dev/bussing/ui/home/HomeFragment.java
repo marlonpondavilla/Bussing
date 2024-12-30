@@ -120,8 +120,10 @@ public class HomeFragment extends Fragment {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
 
         // Replace the current fragment with AccountFragment
-        AccountFragment accountFragment = new AccountFragment();
-        transaction.replace(R.id.nav_host_fragment_activity_main, accountFragment);
+        Fragment accountFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(AccountFragment.class.getName());
+        if (accountFragment != null) {
+            transaction.remove(accountFragment);  // Explicitly remove it
+        }
 
         // Allows the user to navigate back
         transaction.addToBackStack(null);
