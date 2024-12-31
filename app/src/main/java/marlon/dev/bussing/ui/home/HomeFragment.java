@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import marlon.dev.bussing.ui.account.AccountFragment;
 
@@ -42,14 +45,14 @@ public class HomeFragment extends Fragment {
     private CardAdapter cardAdapter;
 
     private ShapeableImageView appBarProfile;
+    private TextView appBarUsername;
+    private TextView appBarEmail;
+    private TextView userNameTextView;  // Reference to the userName TextView in home_background.xml
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        // Inflate the FrameLayout containing homeBackground
-        View frameLayoutView = inflater.inflate(R.layout.home_background, container, false);
 
         // Initialize RecyclerView and set up Adapter
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -67,21 +70,28 @@ public class HomeFragment extends Fragment {
         // Find the TextView for displaying the current date
         TextView dateTextView = view.findViewById(R.id.dateTextView);
 
-        //get the current date in desired format
+        // Get the current date in desired format
         String currentDate = new SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault()).format(new Date());
 
         // Set the current date in the TextView
         dateTextView.setText(currentDate);
 
-        // Initialize ImageView for the app bar profile image
+        // Initialize ImageView and TextViews for the app bar profile
         appBarProfile = view.findViewById(R.id.appBarProfile);
+        appBarUsername = view.findViewById(R.id.appbarUsername);
+        appBarEmail = view.findViewById(R.id.appbarEmail);
+
+        // Initialize the userName TextView (for the "username" section in the home background)
+        userNameTextView = view.findViewById(R.id.userName);
+
+        // Update the AppBar and the home background with user info
+        updateUserInfo();
 
         // Set up a click listener for the profile image to show the dropdown menu
         appBarProfile.setOnClickListener(v -> showPopupMenu(v));
 
         return view;
     }
-
 
     // Method to add multiple card items to cardLists
     private void cardData() {
@@ -92,7 +102,44 @@ public class HomeFragment extends Fragment {
         cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_front, "Makati", "10:30"));
     }
 
-    // Method to show the PopupMenu
+    // Method to update the AppBar and home background with user info (username only)
+    private void updateUserInfo() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String username = user.getDisplayName();  // Get the display name
+            String email = user.getEmail();  // Get the email
+            String photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;  // Get the photo URL
+
+            // Update the userName TextView (for the "username" section in the home background)
+            userNameTextView.setText(username != null ? username : "User");
+
+            // Update the AppBar views
+            appBarUsername.setText(username != null ? username : "Username");
+            appBarEmail.setText(email != null ? email : "username@gmail.com");
+
+            // If a photo URL exists, load it into the ImageView using Glide
+            if (photoUrl != null) {
+                Glide.with(getContext())
+                        .load(photoUrl)
+                        .circleCrop()
+                        .into(appBarProfile);
+            } else {
+                // If no photo URL exists, use a default placeholder image
+                Glide.with(getContext())
+                        .load(R.drawable.user_img)
+                        .circleCrop()
+                        .into(appBarProfile);
+            }
+        } else {
+            // If the user is not signed in, set default values
+            userNameTextView.setText("User");
+            appBarUsername.setText("Username");
+            appBarEmail.setText("username@gmail.com");
+            appBarProfile.setImageResource(R.drawable.user_img);
+        }
+    }
+
+    // Method to show the PopupMenu when the profile image is clicked
     private void showPopupMenu(View view) {
         // Create a PopupMenu and link it to the profile
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
@@ -115,6 +162,7 @@ public class HomeFragment extends Fragment {
         popupMenu.show();
     }
 
+    // Navigate to AccountFragment when "Check Account" is clicked
     private void navigateToAccountFragment() {
         // Using requireActivity() to ensure the activity is available
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -122,7 +170,7 @@ public class HomeFragment extends Fragment {
         // Replace the current fragment with AccountFragment
         Fragment accountFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(AccountFragment.class.getName());
         if (accountFragment != null) {
-            transaction.remove(accountFragment);  // Explicitly remove it
+            transaction.remove(accountFragment);
         }
 
         // Allows the user to navigate back
@@ -138,8 +186,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-    // Remove binding references, since we're not using View Binding here
     @Override
     public void onDestroyView() {
         super.onDestroyView();
