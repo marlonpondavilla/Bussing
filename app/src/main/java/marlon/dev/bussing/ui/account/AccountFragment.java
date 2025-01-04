@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.bumptech.glide.Glide;  // Import Glide
+import com.bumptech.glide.Glide;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,10 +36,9 @@ public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     private AccountViewModel accountViewModel;
-
     private ActivityResultLauncher<Intent> signInLauncher;
 
-    // Access the AppBar views
+    // AppBar views
     private ShapeableImageView appBarProfile;
     private TextView appBarUsername;
     private TextView appBarEmail;
@@ -66,49 +64,36 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize the AppBar views here, after the layout is inflated
-        appBarProfile = getActivity().findViewById(R.id.appBarProfile);
-        appBarUsername = getActivity().findViewById(R.id.appbarUsername);
-        appBarEmail = getActivity().findViewById(R.id.appbarEmail);
+        try {
+            // Initialize the AppBar views here, after the layout is inflated
+            appBarProfile = requireActivity().findViewById(R.id.appBarProfile);
+            appBarUsername = requireActivity().findViewById(R.id.appbarUsername);
+            appBarEmail = requireActivity().findViewById(R.id.appbarEmail);
+        } catch (Exception e) {
+            Log.e("AccountFragment", "AppBar views not found in activity layout", e);
+        }
 
         final Button signOutButton = binding.signOutButton;
         final Button switchAccountButton = binding.switchAccountButton;
 
         // Observe the sign-in status
-        accountViewModel.isSignedIn().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isSignedIn) {
-                if (isSignedIn) {
-                    // If signed in, show the sign-out button
-                    signOutButton.setVisibility(View.VISIBLE);
-                    updateUserInfo(); // Update user info when signed in
-                } else {
-                    // If not signed in, hide the sign-out button
-                    signOutButton.setVisibility(View.GONE);
-                    // Optionally reset the profile details when signed out
-                    binding.username.setText("Username");
-                    binding.userEmail.setText("username@gmail.com");
-                    binding.userProfile.setImageResource(R.drawable.user_img);
-                    appBarUsername.setText("Username");
-                    appBarEmail.setText("username@gmail.com");
-                    appBarProfile.setImageResource(R.drawable.user_img); // Reset AppBar image
-                }
+        accountViewModel.isSignedIn().observe(getViewLifecycleOwner(), isSignedIn -> {
+            if (isSignedIn) {
+                signOutButton.setVisibility(View.VISIBLE);
+                updateUserInfo();
+            } else {
+                signOutButton.setVisibility(View.GONE);
+                resetUserInfo();
             }
         });
 
         signOutButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();  // Sign out the user
+            FirebaseAuth.getInstance().signOut();
             Toast.makeText(getContext(), "Signed out", Toast.LENGTH_SHORT).show();
             startFirebaseUISignIn();
         });
 
-        switchAccountButton.setOnClickListener(view1 -> startFirebaseUISignIn());
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        switchAccountButton.setOnClickListener(v -> startFirebaseUISignIn());
     }
 
     // Start the FirebaseUI sign-in flow
@@ -135,52 +120,74 @@ public class AccountFragment extends Fragment {
         if (result.getResultCode() == RESULT_OK) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                // Successfully signed in
                 Toast.makeText(getContext(), "Signed in successfully!", Toast.LENGTH_SHORT).show();
                 updateUserInfo();
             }
         } else {
-            Toast.makeText(getContext(), "Sign-in failed, account fragment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Sign-in failed", Toast.LENGTH_SHORT).show();
         }
     }
 
     // Update user information on the UI, both in the Fragment and the AppBar
     private void updateUserInfo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String username = user.getDisplayName(); // User's display name (if available)
-            String email = user.getEmail(); // User's email address
-            String photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null; // User's photo URL (if available)
+        if (user == null || binding == null) return;
 
-            // Update user info in the main content
-            binding.username.setText(username != null ? username : "Username");
-            binding.userEmail.setText(email != null ? email : "username@gmail.com");
-            if (photoUrl != null) {
-                Glide.with(getContext())
-                        .load(photoUrl)
-                        .circleCrop()  // Optional: Circle crop the image for a rounded profile image
-                        .into(binding.userProfile);  // Update profile image in Fragment
-            } else {
-                Glide.with(getContext())
-                        .load(R.drawable.user_img) // Default placeholder image
-                        .circleCrop()
-                        .into(binding.userProfile);
-            }
+        String username = user.getDisplayName();
+        String email = user.getEmail();
+        String photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
 
-            // Update user info in the AppBar
+        // Update user info in the main content
+        binding.username.setText(username != null ? username : "Username");
+        binding.userEmail.setText(email != null ? email : "username@gmail.com");
+        if (photoUrl != null) {
+            Glide.with(this)
+                    .load(photoUrl)
+                    .circleCrop()
+                    .into(binding.userProfile);
+        } else {
+            Glide.with(this)
+                    .load(R.drawable.user_img)
+                    .circleCrop()
+                    .into(binding.userProfile);
+        }
+
+        // Update AppBar views safely
+        if (appBarUsername != null && appBarEmail != null && appBarProfile != null) {
             appBarUsername.setText(username != null ? username : "Username");
             appBarEmail.setText(email != null ? email : "username@gmail.com");
             if (photoUrl != null) {
-                Glide.with(getContext())
+                Glide.with(this)
                         .load(photoUrl)
                         .circleCrop()
                         .into(appBarProfile);
             } else {
-                Glide.with(getContext())
+                Glide.with(this)
                         .load(R.drawable.user_img)
                         .circleCrop()
                         .into(appBarProfile);
             }
         }
+    }
+
+    // Reset user information when signed out
+    private void resetUserInfo() {
+        if (binding == null) return;
+
+        binding.username.setText("Username");
+        binding.userEmail.setText("username@gmail.com");
+        binding.userProfile.setImageResource(R.drawable.user_img);
+
+        if (appBarUsername != null) appBarUsername.setText("Username");
+        if (appBarEmail != null) appBarEmail.setText("username@gmail.com");
+        if (appBarProfile != null) appBarProfile.setImageResource(R.drawable.user_img);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove observers and set binding to null
+        accountViewModel.isSignedIn().removeObservers(getViewLifecycleOwner());
+        binding = null;
     }
 }

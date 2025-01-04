@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     private ShapeableImageView appBarProfile;
     private TextView appBarUsername;
     private TextView appBarEmail;
-    private TextView userNameTextView;  // Reference to the userName TextView in home_background.xml
+    private TextView userNameTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
         // Update the AppBar and the home background with user info
         updateUserInfo();
 
-        // Set up a click listener for the profile image to show the dropdown menu
+        // onclick listener for the profile image to show the dropdown menu
         appBarProfile.setOnClickListener(v -> showPopupMenu(v));
 
         return view;
@@ -110,8 +110,13 @@ public class HomeFragment extends Fragment {
             String email = user.getEmail();  // Get the email
             String photoUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;  // Get the photo URL
 
-            // Update the userName TextView (for the "username" section in the home background)
-            userNameTextView.setText(username != null ? username : "User");
+            if (username != null) {
+                // Split the username by spaces and take the first word
+                String firstName = username.split(" ")[0];  // This will get the first word of the full name
+                userNameTextView.setText(firstName);
+            } else {
+                userNameTextView.setText("User");
+            }
 
             // Update the AppBar views
             appBarUsername.setText(username != null ? username : "Username");

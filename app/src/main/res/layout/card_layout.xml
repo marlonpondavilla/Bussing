@@ -143,15 +143,31 @@
                     </LinearLayout>
 
 
-                    <!--wala pa ko id dito lon wala pako maisip na pwede lagay-->
-                    <ImageView
-                        android:id="@+id/dummyId"
-                        android:backgroundTint="#c9c9c9"
+                    <!--dropdown imageview-->
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/card_button"
                         android:layout_gravity="center"
-                        />
+                        app:endIconMode="dropdown_menu">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:background="@android:color/transparent" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/dropdown"-->
+<!--                        android:backgroundTint="#c9c9c9"-->
+<!--                        android:layout_width="60dp"-->
+<!--                        android:layout_height="60dp"-->
+<!--                        android:background="@drawable/card_button"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        />-->
 
                 </LinearLayout>
 

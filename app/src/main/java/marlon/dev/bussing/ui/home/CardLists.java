@@ -15,6 +15,7 @@ public class CardLists {
         this.BusCompanyImage = busCompanyImage;
         this.CurrentLocation = currentLocation;
         this.DepartureTime = departureTime;
+
     }
 
     public String getBusNumber() {
