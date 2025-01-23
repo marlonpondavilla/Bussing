@@ -7,14 +7,21 @@ public class CardLists {
     private int BusCompanyImage;
     private String CurrentLocation;
     private String DepartureTime;
+    private String DriverName;
+    private String ConductorName;
+    private int Capacity;
 
-    public CardLists(String busNumber, String fromLocation, String toWhereLocation, int busCompanyImage, String currentLocation, String departureTime) {
+    public CardLists(String busNumber, String fromLocation, String toWhereLocation, int busCompanyImage, String currentLocation, String departureTime,
+                     String driver, String conductor, int capacity) {
         this.BusNumber = busNumber;
         this.FromLocation = fromLocation;
         this.ToWhereLocation = toWhereLocation;
         this.BusCompanyImage = busCompanyImage;
         this.CurrentLocation = currentLocation;
         this.DepartureTime = departureTime;
+        this.DriverName = driver;
+        this.ConductorName = conductor;
+        this.Capacity = capacity;
 
     }
 
@@ -64,5 +71,29 @@ public class CardLists {
 
     public void setDepartureTime(String departureTime) {
         DepartureTime = departureTime;
+    }
+
+    public String getDriverName() {
+        return DriverName;
+    }
+
+    public void setDriverName(String driverName) {
+        DriverName = driverName;
+    }
+
+    public String getConductorName() {
+        return ConductorName;
+    }
+
+    public void setConductorName(String conductorName) {
+        ConductorName = conductorName;
+    }
+
+    public void setCapacity(int capacity) {
+        Capacity = capacity;
+    }
+
+    public int getCapacity() {
+        return Capacity;
     }
 }

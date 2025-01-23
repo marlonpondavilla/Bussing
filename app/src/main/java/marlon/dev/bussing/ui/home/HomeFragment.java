@@ -95,11 +95,11 @@ public class HomeFragment extends Fragment {
 
     // Method to add multiple card items to cardLists
     private void cardData() {
-        cardLists.add(new CardLists("BUS01", "Bulacan", "Valenzuela", R.drawable.bus_front, "Obando", "09:30"));
-        cardLists.add(new CardLists("BUS02", "Bocaue", "Trinoma", R.drawable.bus_front, "Meycauyan", "13:45"));
-        cardLists.add(new CardLists("BUS03", "Quezon City", "Cubao", R.drawable.bus_front, "Caloocan", "18:00"));
-        cardLists.add(new CardLists("BUS04", "Taguig", "BGC", R.drawable.bus_front, "Pasig", "12:25"));
-        cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_front, "Makati", "10:30"));
+        cardLists.add(new CardLists("BUS01", "Bulacan", "Valenzuela", R.drawable.bus_front, "Obando", "09:30", "Son Goku", "Vegeta", 20));
+        cardLists.add(new CardLists("BUS02", "Bocaue", "Trinoma", R.drawable.bus_front, "Meycauyan", "13:45", "Monkey D. Luffy", "Roronoa Zoro", 10));
+        cardLists.add(new CardLists("BUS03", "Quezon City", "Cubao", R.drawable.bus_front, "Caloocan", "18:00", "Uzumaki Naruto", "Uchiha Sasuke", 65));
+        cardLists.add(new CardLists("BUS04", "Taguig", "BGC", R.drawable.bus_front, "Pasig", "12:25", "Gon Freecss", "Killua Zoldyck", 48));
+        cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_front, "Makati", "10:30", "Itadori Yuji", "Fushiguro Megumi", 89));
     }
 
     // Method to update the AppBar and home background with user info (username only)
