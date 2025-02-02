@@ -27,16 +27,17 @@ public class WelcomePage extends AppCompatActivity {
         if (currentUser != null) {
             // If the user is signed in, navigate to MainActivity directly
             navigateToMainActivity();
-        } else {
-            // If the user is not signed in, show the welcome page
-            getStarted = findViewById(R.id.getStartedButton);
-
-            getStarted.setOnClickListener(v -> {
-                // Redirect to Firebase UI login/signin
-                Intent intent = new Intent(WelcomePage.this, FirebaseUIActivity.class);
-                startActivity(intent);
-            });
         }
+//        else {
+//            // If the user is not signed in, show the welcome page
+//            getStarted = findViewById(R.id.getStartedButton);
+//
+//            getStarted.setOnClickListener(v -> {
+//                // Redirect to Firebase UI login/signin
+//                Intent intent = new Intent(WelcomePage.this, FirebaseUIActivity.class);
+//                startActivity(intent);
+//            });
+//        }
     }
 
     @Override
