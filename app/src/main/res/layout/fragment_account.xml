@@ -44,7 +44,7 @@
                 android:fontFamily="@font/nunito_semibold"
                 android:text="Username"
                 android:textColor="#f9f9f9"
-                android:textSize="24sp" /> <!-- Changed dp to sp for text size -->
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/userEmail"
@@ -53,22 +53,24 @@
                 android:fontFamily="@font/nunito"
                 android:text="username@gmail.com"
                 android:textColor="#f9f9f9"
-                android:textSize="14sp" /> <!-- Changed dp to sp for text size -->
+                android:textSize="14sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <!-- User ID Text -->
-    <TextView
-        android:id="@+id/userId"
+    <Button
+        android:id="@+id/editProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/nunito_semibold"
-        android:text="123456789"
-        android:textColor="#d9d9d9"
-        android:textSize="14sp"
-        android:layout_marginTop="130dp"
+        android:fontFamily="@font/nunito_bold"
+        android:text="Edit Profile"
+        android:textColor="#133AC1"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:backgroundTint="#FBF7F7"
+        android:layout_marginTop="120dp"
         android:layout_marginLeft="120dp"/>
 
     <!-- Action Buttons -->
@@ -76,7 +78,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="200dp"> <!-- Adjusted marginTop -->
+        android:layout_marginTop="200dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ticketButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/ticket_solid"
+            android:text="           Ticket"
+            android:gravity="center_vertical"
+            android:textColor="#133AC1"
+            android:textAllCaps="false"
+            android:fontFamily="@font/nunito_bold"
+            android:textSize="14sp"
+            android:drawableRight="@drawable/chevron"
+            android:background="?attr/selectableItemBackground"
+            android:drawableTint="#133AC1"
+            />
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/ticketListButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:drawableLeft="@drawable/ticket_solid"-->
+<!--            android:text="           Ticket List"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:textColor="#133AC1"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:fontFamily="@font/nunito_bold"-->
+<!--            android:textSize="14sp"-->
+<!--            android:drawableRight="@drawable/chevron"-->
+<!--            android:background="?attr/selectableItemBackground"-->
+<!--            android:drawableTint="#133AC1"-->
+<!--            />-->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/walletButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/wallet"
+            android:text="           Wallet"
+            android:gravity="center_vertical"
+            android:textColor="#133AC1"
+            android:textAllCaps="false"
+            android:fontFamily="@font/nunito_bold"
+            android:textSize="14sp"
+            android:drawableRight="@drawable/chevron"
+            android:background="?attr/selectableItemBackground"
+            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signOutButton"
@@ -96,23 +154,6 @@
             android:background="?attr/selectableItemBackground"
             />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/switchAccountButton"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:drawableLeft="@drawable/switch_account"
-            android:text="          Switch Account"
-            android:gravity="center_vertical"
-            android:textColor="#133AC1"
-            android:textAllCaps="false"
-            android:fontFamily="@font/nunito_bold"
-            android:textSize="14sp"
-            android:drawableRight="@drawable/chevron"
-            android:background="?attr/selectableItemBackground"
-            />
 
     </LinearLayout>
 
@@ -124,5 +165,14 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="#87A0F8" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#87A0F8" />
+
 
 </FrameLayout>

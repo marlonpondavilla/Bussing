@@ -18,10 +18,10 @@
         tools:layout="@layout/fragment_ticket" />
 
     <fragment
-        android:id="@+id/navigation_location"
-        android:name="marlon.dev.bussing.ui.location.LocationFragment"
-        android:label="Location"
-        tools:layout="@layout/fragment_location" />
+        android:id="@+id/navigation_status"
+        android:name="marlon.dev.bussing.ui.status.StatusFragment"
+        android:label="Status"
+        tools:layout="@layout/fragment_status" />
 
     <fragment
         android:id="@+id/navigation_history"

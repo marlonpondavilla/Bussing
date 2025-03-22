@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="10dp"
+    app:cardElevation="4dp"
     app:contentPadding="10dp"
     android:id="@+id/cardView"
     android:onClick="expand"
@@ -32,7 +32,7 @@
                             android:id="@+id/busNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="BUS 01"
+                            android:text="--"
                             android:fontFamily="@font/nunito_bold"
                             android:textSize="16dp"
                             android:textColor="#1e2336"
@@ -55,7 +55,7 @@
                                     android:id="@+id/fromLocation"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:text="Bulakan"
+                                    android:text="--"
                                     android:textColor="#133AC1"
                                     android:textSize="16dp"
                                     android:fontFamily="@font/nunito_bold"
@@ -72,7 +72,7 @@
                                     android:id="@+id/toWhereLocation"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:text="Malolos"
+                                    android:text="--"
                                     android:textSize="16dp"
                                     android:textColor="#133AC1"
                                     android:fontFamily="@font/nunito_bold"
@@ -120,7 +120,7 @@
                                 android:id="@+id/currentLocation"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Guiginto, Bulacan"
+                                android:text="--"
                                 android:textSize="16dp"
                                 android:textColor="#03c03c"
                                 android:layout_gravity="center"
@@ -140,7 +140,7 @@
                                 android:id="@+id/departureTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="09:30"
+                                android:text="--"
                                 android:textSize="16dp"
                                 android:textColor="#1D9793"
                                 android:layout_gravity="center"
@@ -154,7 +154,6 @@
                             android:id="@+id/dropdown"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/card_button"
                             android:layout_gravity="center"
                             android:src="@drawable/chevron_down"
                             android:scaleType="center"/>
@@ -168,7 +167,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-
                     android:layout_marginHorizontal="12dp">
 
                     <LinearLayout
@@ -190,7 +188,7 @@
                             android:id="@+id/driverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="batman"
+                            android:text="--"
                             android:textSize="16dp"
                             android:textColor="#1D9793"
                             android:fontFamily="@font/nunito_semibold"
@@ -211,7 +209,7 @@
                             android:id="@+id/conductorName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="victor magtangol"
+                            android:text="--"
                             android:textSize="16dp"
                             android:textColor="#1D9793"
                             android:fontFamily="@font/nunito_semibold"
@@ -219,7 +217,7 @@
                             android:layout_marginVertical="10dp"/>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_marginVertical="12dp">
@@ -237,10 +235,30 @@
                                 android:id="@+id/capacity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="bentemil"
+                                android:text="--"
                                 android:textSize="20dp"
                                 android:textColor="#1D9793"
                                 android:fontFamily="@font/nunito_semibold"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="14dp"
+                                android:text="Price:"
+                                android:textSize="20dp"
+                                android:textColor="#595959"
+                                android:fontFamily="@font/nunito_bold"
+                                android:layout_marginRight="10dp"/>
+
+                            <TextView
+                                android:id="@+id/price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textSize="20dp"
+                                android:textColor="#03c03c"
+                                android:fontFamily="@font/nunito_bold"
                                 />
 
                         </LinearLayout>
@@ -250,15 +268,43 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Status: "
+                        android:textSize="16dp"
+                        android:textColor="#133AC1"
+                        android:fontFamily="@font/nunito_semibold"
+                        />
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="--"
+                        android:textSize="16dp"
+                        android:textColor="#133AC1"
+                        android:fontFamily="@font/nunito_semibold"
+                        />
+                </LinearLayout>
+
                 <Button
-                    android:id="@+id/viewMaps"
+                    android:id="@+id/bookButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Status"
-                    android:textColor="#133AC1"
-                    android:background="?attr/selectableItemBackground"
-                    />
+                    android:text="Book"
+                    android:textColor="#f9f9f9"
+                    android:fontFamily="@font/nunito_bold"
+                    android:background="@drawable/account_bg" />
 
             </LinearLayout>
 

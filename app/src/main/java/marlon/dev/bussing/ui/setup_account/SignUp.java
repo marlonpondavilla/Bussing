@@ -1,16 +1,45 @@
 package marlon.dev.bussing.ui.setup_account;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import marlon.dev.bussing.MainActivity;
 import marlon.dev.bussing.R;
+import marlon.dev.bussing.ui.home.HomeFragment;
 
 public class SignUp extends AppCompatActivity {
+
+    TextInputEditText email, password, confirmPassword, name;
+    Button signup;
+    FirebaseAuth auth;
+    TextView toSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +51,144 @@ public class SignUp extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        auth = FirebaseAuth.getInstance();
+        toSignIn = findViewById(R.id.toLogIn);
+        email = findViewById(R.id.emailTextInput);
+        name = findViewById(R.id.nameTextInput);
+        password = findViewById(R.id.passwordTextInput);
+        confirmPassword = findViewById(R.id.confirmPassTextInput);
+        signup = findViewById(R.id.signupButton);
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String user = email.getText().toString();
+                String pass = password.getText().toString();
+                String confirmPass = confirmPassword.getText().toString();
+                String userName = name.getText().toString();  // Capture full name
+
+                // Check if any field is empty
+                if (user.isEmpty()) {
+                    Toast.makeText(SignUp.this, "Email cannot be empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (userName.isEmpty()) {
+                    Toast.makeText(SignUp.this, "Name cannot be empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (pass.isEmpty()) {
+                    Toast.makeText(SignUp.this, "Password cannot be empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (confirmPass.isEmpty()) {
+                    Toast.makeText(SignUp.this, "Please confirm your password!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Validate email format
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
+                    email.setError("Please enter a valid email address!");
+                    return;
+                }
+
+                // Check if passwords match
+                if (!pass.equals(confirmPass)) {
+                    Toast.makeText(SignUp.this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Check password length
+                if (pass.length() < 6) {
+                    password.setError("Password should be at least 6 characters long!");
+                    return;
+                }
+
+                // Proceed with sign up
+                auth.createUserWithEmailAndPassword(user, pass)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                    // Save user data immediately after creation
+                                    saveUserData(firebaseUser, user);
+
+                                    // Then attempt to update profile
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(userName)
+                                            .build();
+
+                                    firebaseUser.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (!task.isSuccessful()) {
+                                                        Toast.makeText(SignUp.this, "Profile update failed, but account was created", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+
+                                } else {
+                                    Toast.makeText(SignUp.this, "Signup Unsuccessful: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+            }
+        });
+
+        toSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignUp.this, SignIn.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
+    private void saveUserData(FirebaseUser firebaseUser, String email) {
+        String userId = firebaseUser.getUid();
+        String name = firebaseUser.getDisplayName();
+        String profile = "defaultProfileUrl"; // Placeholder, you can update later
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("id", userId);
+        userData.put("name", name);
+        userData.put("profile", profile);
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+
+        // Save user data in Realtime Database
+        databaseRef.child("Users").child(userId).setValue(userData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Create wallet for the user in Firestore
+                        createWalletForUser(userId);
+
+                        Toast.makeText(SignUp.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), SignIn.class));
+                        finish();
+                    } else {
+                        Toast.makeText(SignUp.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // Create wallet for the user in Firestore
+    private void createWalletForUser(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userWalletRef = db.collection("UserWalletsCollection").document(userId);
+
+        Map<String, Object> walletData = new HashMap<>();
+        walletData.put("balance", 1000.0); // Initial balance
+
+        userWalletRef.set(walletData)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Wallet created for user: " + userId))
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to create wallet", e));
+    }
+
 }

@@ -84,7 +84,7 @@
                     android:textColorHint="#244DDC"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="#7d7d7d"
-                    app:hintTextColor="#333333"
+                    app:hintTextColor="#133ac2"
                     app:boxStrokeWidth="0dp"
                     app:boxBackgroundMode="outline"
                     app:boxStrokeColor="#133ac2"
@@ -120,21 +120,22 @@
                     android:textColor="#f9f9f9"
                     android:textAllCaps="false"
                     android:fontFamily="@font/nunito_semibold"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:text="Log In"/>
 
                 <Button
-                    android:id="@+id/continueWithBtn"
+                    android:id="@+id/continueWithGoogleBtn"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_marginHorizontal="60dp"
                     android:layout_marginTop="10dp"
                     android:backgroundTint="#133ac2"
+                    android:drawableLeft="@drawable/google_icon"
                     android:textColor="#f9f9f9"
                     android:textAllCaps="false"
                     android:fontFamily="@font/nunito_semibold"
-                    android:textSize="18dp"
-                    android:text="or continue with"/>
+                    android:textSize="16dp"
+                    android:text="Continue with Google"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

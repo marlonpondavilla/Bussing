@@ -4,29 +4,31 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="client_id">1044367459649-vmqbht1hq996hbn7i7benmq63klcnb45.apps.googleusercontent.com</string>
 
     <string-array name="departure">
-        <item>Bulacan Terminal</item>
-        <item>Cubao Terminal</item>
-        <item>Divisoria Terminal</item>
-        <item>Ermita Terminal</item>
-        <item>Santolan Terminal</item>
+        <item>Bulacan</item>
+        <item>Cubao</item>
+        <item>Divisoria</item>
+        <item>Ermita</item>
+        <item>Santolan</item>
+        <item>PITX</item>
     </string-array>
 
     <string-array name="arrival">
-        <item>Bulacan Terminal</item>
-        <item>Cubao Terminal</item>
-        <item>Divisoria Terminal</item>
-        <item>Ermita Terminal</item>
-        <item>Santolan Terminal</item>
+        <item>Bulacan</item>
+        <item>Cubao</item>
+        <item>Divisoria</item>
+        <item>Ermita</item>
+        <item>Santolan</item>
+        <item>PITX</item>
     </string-array>
 
     <string-array name="passengers">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
+        <item>Regular</item>
+        <item>Student</item>
+        <item>Senior</item>
+        <item>PWD</item>
     </string-array>
 
 </resources>

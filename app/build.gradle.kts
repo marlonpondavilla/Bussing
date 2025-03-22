@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.legacy.support.v4)
     implementation(libs.play.services.maps)
     implementation(libs.activity)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -75,4 +77,10 @@ dependencies {
     //Added Glide to project to handle image loading
     implementation ("com.github.bumptech.glide:glide:4.15.1")  // Latest Glide version at the time of writing
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+    //refresh layout
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    //qrcode dependency
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 }

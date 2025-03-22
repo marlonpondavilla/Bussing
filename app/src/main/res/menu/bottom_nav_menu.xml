@@ -12,9 +12,9 @@
         android:title="Ticket" />
 
     <item
-        android:id="@+id/navigation_location"
-        android:icon="@drawable/location_outline"
-        android:title="Location" />
+        android:id="@+id/navigation_status"
+        android:icon="@drawable/status_selector"
+        android:title="Status" />
 
     <item
         android:id="@+id/navigation_history"

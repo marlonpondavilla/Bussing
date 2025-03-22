@@ -8,11 +8,12 @@ public class CardLists {
     private String CurrentLocation;
     private String DepartureTime;
     private String DriverName;
-    private String ConductorName;
-    private int Capacity;
+    private String ConductorName, Status;
+    private int Capacity, Price;
+
 
     public CardLists(String busNumber, String fromLocation, String toWhereLocation, int busCompanyImage, String currentLocation, String departureTime,
-                     String driver, String conductor, int capacity) {
+                     String driver, String conductor, int capacity, int price, String status) {
         this.BusNumber = busNumber;
         this.FromLocation = fromLocation;
         this.ToWhereLocation = toWhereLocation;
@@ -22,8 +23,21 @@ public class CardLists {
         this.DriverName = driver;
         this.ConductorName = conductor;
         this.Capacity = capacity;
-
+        this.Price = price;
+        this.Status = status;
     }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
+    public int getPrice() {return Price;}
+
+    public void setPrice(int price) {Price = price;}
 
     public String getBusNumber() {
         return BusNumber;

@@ -2,8 +2,6 @@ package marlon.dev.bussing.ui.splash_welcome;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,33 +9,36 @@ import com.google.firebase.auth.FirebaseUser;
 
 import marlon.dev.bussing.MainActivity;
 import marlon.dev.bussing.R;
-import marlon.dev.bussing.firebase.FirebaseUIActivity;
+import marlon.dev.bussing.ui.setup_account.SignIn;
+import marlon.dev.bussing.ui.setup_account.SignUp;
 
 public class WelcomePage extends AppCompatActivity {
 
-    Button getStarted;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome_page);
+    protected void onStart() {
+        super.onStart();
 
         // Check if the user is already signed in
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             // If the user is signed in, navigate to MainActivity directly
             navigateToMainActivity();
+        } else {
+            // If the user is not signed in, show the welcome page
+            setContentView(R.layout.activity_welcome_page);
+
+            findViewById(R.id.signInButton).setOnClickListener(view -> {
+                Intent intent = new Intent(WelcomePage.this, SignIn.class);
+                startActivity(intent);
+                finish();
+            });
+
+            findViewById(R.id.registerButton).setOnClickListener(view -> {
+                Intent intent = new Intent(WelcomePage.this, SignUp.class);
+                startActivity(intent);
+                finish();
+            });
         }
-//        else {
-//            // If the user is not signed in, show the welcome page
-//            getStarted = findViewById(R.id.getStartedButton);
-//
-//            getStarted.setOnClickListener(v -> {
-//                // Redirect to Firebase UI login/signin
-//                Intent intent = new Intent(WelcomePage.this, FirebaseUIActivity.class);
-//                startActivity(intent);
-//            });
-//        }
     }
 
     @Override

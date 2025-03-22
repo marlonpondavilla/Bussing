@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_ticket, R.id.navigation_location, R.id.navigation_history, R.id.navigation_account)
+                R.id.navigation_home, R.id.navigation_ticket, R.id.navigation_status, R.id.navigation_history, R.id.navigation_account)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Call the default back press behavior (important to call after custom behavior)
         if (!isBackPressedOnce) {
-            super.onBackPressed();  // Only call super.onBackPressed() if not exiting
+            super.onBackPressed();
         }
     }
 }

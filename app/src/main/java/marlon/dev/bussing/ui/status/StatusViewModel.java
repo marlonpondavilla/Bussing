@@ -1,13 +1,13 @@
-package marlon.dev.bussing.ui.location;
+package marlon.dev.bussing.ui.status;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LocationViewModel extends ViewModel {
+public class StatusViewModel extends ViewModel {
     public final MutableLiveData<String> mText;
 
-    public LocationViewModel() {
+    public StatusViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("See the current location of buses");
     }
