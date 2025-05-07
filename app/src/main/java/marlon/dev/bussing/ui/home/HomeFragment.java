@@ -3,6 +3,7 @@ package marlon.dev.bussing.ui.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,10 +71,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        if (cardLists.isEmpty()) {
-//            cardData();
-//        }
-
         db = FirebaseFirestore.getInstance();
         cardAdapter = new CardAdapter(getContext(), cardLists);
         recyclerView.setAdapter(cardAdapter);
@@ -115,7 +112,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 cardAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }, 1000); //if data is fetched from db the delay is not needed
+        }, 1000);
     }
 
     private void fetchDataFromFireStore() {
@@ -169,39 +166,35 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
 
-//    private void cardData() {
-//        cardLists.add(new CardLists("BUS01", "Bulacan", "Valenzuela", R.drawable.bus_front, "Obando", "09:30", "Son Goku", "Vegeta", 20, 00, "Active"));
-//        cardLists.add(new CardLists("BUS02", "Bocaue", "Trinoma", R.drawable.bus_front, "Meycauyan", "13:45", "Monkey D. Luffy", "Roronoa Zoro", 10, 00, "Active"));
-//        cardLists.add(new CardLists("BUS03", "Quezon City", "Cubao", R.drawable.bus_front, "Caloocan", "18:00", "Uzumaki Naruto", "Uchiha Sasuke", 65, 00, "Active"));
-//        cardLists.add(new CardLists("BUS04", "Taguig", "BGC", R.drawable.bus_front, "Pasig", "12:25", "Gon Freecss", "Killua Zoldyck", 48, 00, "Active"));
-//        cardLists.add(new CardLists("BUS05", "Manila", "Intramuros", R.drawable.bus_front, "Makati", "10:30", "Itadori Yuji", "Fushiguro Megumi", 89, 00, "Active"));
-//    }
-
     public void updateUserInfo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String username = user.getDisplayName();
             String email = user.getEmail();
 
-            // Check if the photo URL is directly available from FirebaseUser
-            Uri photoUrl = user.getPhotoUrl(); // Check directly from FirebaseUser
+            // Reference to the Realtime Database to get base64 image
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+            String userID = user.getUid();
 
-            if (photoUrl != null) {
-                // Use Glide to load the photoUrl
-                Glide.with(getContext())
-                        .load(photoUrl)
-                        .placeholder(appBarProfile.getDrawable())
-                        .error(R.drawable.default_user1)
-                        .circleCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(appBarProfile);
-            } else {
-                // If no photo URL is available, you can either use a default image or leave it empty
-                Glide.with(getContext())
-                        .load(R.drawable.default_user1)
-                        .circleCrop()
-                        .into(appBarProfile);
-            }
+            databaseReference.child(userID).child("profileImageBase64").get()
+                    .addOnSuccessListener(snapshot -> {
+                        String base64 = snapshot.getValue(String.class);
+                        if (base64 != null && !base64.isEmpty()) {
+                            loadBase64Image(base64, appBarProfile);
+                        } else {
+                            // Fallback if base64 image is not available
+                            Glide.with(getContext())
+                                    .load(R.drawable.default_user1)
+                                    .circleCrop()
+                                    .into(appBarProfile);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Glide.with(getContext())
+                                .load(R.drawable.default_user1)
+                                .circleCrop()
+                                .into(appBarProfile);
+                    });
 
             appBarUsername.setText(username != null ? username : "Username");
             appBarEmail.setText(email != null ? email : "username@gmail.com");
@@ -214,6 +207,18 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         }
     }
+
+    private void loadBase64Image(String base64, ShapeableImageView imageView) {
+        try {
+            byte[] decodedBytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+            Bitmap decodedBitmap = android.graphics.BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            imageView.setImageBitmap(decodedBitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageView.setImageResource(R.drawable.default_user1); // fallback
+        }
+    }
+
 
 
     private void showPopupMenu(View view) {

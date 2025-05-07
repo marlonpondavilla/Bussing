@@ -26,7 +26,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginLeft="30dp"
-            android:src="@drawable/user_img"
+            android:src="@drawable/default_user1"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/AccountProfileShape"/>
 
@@ -80,24 +80,6 @@
         android:orientation="vertical"
         android:layout_marginTop="200dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/ticketButton"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:drawableLeft="@drawable/ticket_solid"
-            android:text="           Ticket"
-            android:gravity="center_vertical"
-            android:textColor="#133AC1"
-            android:textAllCaps="false"
-            android:fontFamily="@font/nunito_bold"
-            android:textSize="14sp"
-            android:drawableRight="@drawable/chevron"
-            android:background="?attr/selectableItemBackground"
-            android:drawableTint="#133AC1"
-            />
 
 <!--        <com.google.android.material.button.MaterialButton-->
 <!--            android:id="@+id/ticketListButton"-->
@@ -165,14 +147,5 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="#87A0F8" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="340dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="#87A0F8" />
-
 
 </FrameLayout>

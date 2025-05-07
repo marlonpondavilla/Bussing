@@ -1,39 +1,35 @@
 package marlon.dev.bussing.ui.history;
 
 public class CardHistoryLists {
+    private String TransactionFrom, TransactionTo, TransactionTicketNo, TransactionPrice, TransactionTimeStamp;
 
-    private int TransactionTypeIcon;
-    private String TransactionType;
-    private String TransactionDate;
-
-    public CardHistoryLists(int transactionTypeIcon, String transactionType, String transactionDate) {
-        this.TransactionTypeIcon = transactionTypeIcon;
-        this.TransactionType = transactionType;
-        this.TransactionDate = transactionDate;
+    public CardHistoryLists(String transactionFrom, String transactionTo, String transactionTicketNo, String transactionPrice, String transactionTimeStamp) {
+        this.TransactionFrom = transactionFrom;
+        this.TransactionTo = transactionTo;
+        this.TransactionTicketNo = transactionTicketNo;
+        this.TransactionPrice = transactionPrice;
+        this.TransactionTimeStamp = transactionTimeStamp;
     }
 
-    public int getTransactionTypeIcon() {
-        return TransactionTypeIcon;
+    public CardHistoryLists() {}
+
+    public String getTransactionTo() {
+        return TransactionTo;
     }
 
-    public void setTransactionTypeIcon(int transactionTypeIcon) {
-        TransactionTypeIcon = transactionTypeIcon;
+    public String getTransactionFrom() {
+        return TransactionFrom;
     }
 
-    public String getTransactionType() {
-        return TransactionType;
+    public String getTransactionTicketNo() {
+        return TransactionTicketNo;
     }
 
-    public void setTransactionDate(String transactionDate) {
-        TransactionDate = transactionDate;
+    public String getTransactionPrice() {
+        return TransactionPrice;
     }
 
-    public String getTransactionDate() {
-        return TransactionDate;
+    public String getTransactionTimeStamp() {
+        return TransactionTimeStamp;
     }
-
-    public void setTransactionType(String transactionType) {
-        TransactionType = transactionType;
-    }
-
 }

@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.inappmessaging.display)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -83,4 +84,7 @@ dependencies {
 
     //qrcode dependency
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    //fcm library
+    implementation ("com.google.firebase:firebase-messaging:23.4.1")
 }

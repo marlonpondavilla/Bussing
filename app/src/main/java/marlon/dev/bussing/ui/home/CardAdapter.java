@@ -104,7 +104,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         LinearLayout detailsLayout = holder.itemView.findViewById(R.id.details);
         ImageView dropdownImage = holder.itemView.findViewById(R.id.dropdown);
-        holder.bookButton = holder.itemView.findViewById(R.id.bookButton); // Ensure this exists in layout
+        holder.bookButton = holder.itemView.findViewById(R.id.bookButton);
 
         // Initially hide details
         detailsLayout.setVisibility(View.GONE);

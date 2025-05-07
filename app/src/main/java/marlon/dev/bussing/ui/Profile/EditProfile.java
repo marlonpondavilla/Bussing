@@ -1,9 +1,13 @@
 package marlon.dev.bussing.ui.Profile;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.MenuInflater;
@@ -35,6 +39,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import marlon.dev.bussing.R;
 import marlon.dev.bussing.ui.setup_account.SignIn;
 
@@ -54,6 +61,7 @@ public class EditProfile extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,9 @@ public class EditProfile extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("Users");
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+
         // Initialize Google Sign-In Client
         googleSignInClient = GoogleSignIn.getClient(EditProfile.this,
                 new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -93,8 +104,8 @@ public class EditProfile extends AppCompatActivity {
         deleteAccountBtn.setOnClickListener(v -> deleteAccount());
 
         // Check if the user is logged in and display their info
+        // Check if the user is logged in and display their info
         if (currentUser != null) {
-            // Show the logged-in user's info
             String fullName = currentUser.getDisplayName();
             if (fullName != null && !fullName.isEmpty()) {
                 userName.setText(fullName);
@@ -103,26 +114,25 @@ public class EditProfile extends AppCompatActivity {
             }
 
             userEmail.setText(currentUser.getEmail() != null ? currentUser.getEmail() : "No email available");
-
             String userID = currentUser.getUid();
             this.userID.setText(userID);
 
-            // Load user profile image (if available)
-            if (currentUser.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(currentUser.getPhotoUrl())
-                        .circleCrop()
-                        .into(userProfile);
-            } else {
-                // Use a default image if no photo is available
-                Glide.with(this)
-                        .load(R.drawable.default_user1)
-                        .circleCrop()
-                        .into(userProfile);
-            }
+            // 🔄 Load base64 image from Realtime Database instead of using PhotoUri
+            databaseReference.child(userID).child("profileImageBase64").get()
+                    .addOnSuccessListener(snapshot -> {
+                        String base64 = snapshot.getValue(String.class);
+                        if (base64 != null && !base64.isEmpty()) {
+                            loadBase64Image(base64, userProfile);
+                        } else {
+                            userProfile.setImageResource(R.drawable.default_user1);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // fallback if DB retrieval fails
+                        userProfile.setImageResource(R.drawable.default_user1);
+                    });
 
         } else {
-            // If not logged in, show a message
             userName.setText("Not logged in");
             userEmail.setText("");
             userProfile.setImageResource(R.drawable.default_user1);
@@ -133,14 +143,14 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void deleteAccount() {
-        // Step 1: Ask the user for their password to reauthenticate
+        // Ask the user for their password to reauthenticate
         final EditText passwordInput = new EditText(this);
         passwordInput.setHint("Enter your password");
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         passwordInput.setPadding(62, 62, 62, 62);
 
-        // Step 2: Create a dialog asking for the password
+        // a dialog asking for the password
         new AlertDialog.Builder(EditProfile.this)
                 .setTitle("Reauthenticate to Delete Account")
                 .setMessage("Please enter your password to confirm account deletion.")
@@ -165,7 +175,7 @@ public class EditProfile extends AppCompatActivity {
             // Create a credential with the password
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
 
-            // Step 4: Reauthenticate the user with the provided credentials
+            //Reauthenticate the user with the provided credentials
             user.reauthenticate(credential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -186,27 +196,27 @@ public class EditProfile extends AppCompatActivity {
                 .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     if (currentUser != null) {
-                        // Step 5: Delete the user's data from Firebase Realtime Database
+                        progressDialog.setMessage("Deleting account...");
+                        progressDialog.show(); // Show progress dialog
+
                         String userId = currentUser.getUid();
                         databaseReference.child(userId).removeValue()
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        // Step 6: Delete the user from Firebase Authentication
                                         currentUser.delete()
                                                 .addOnCompleteListener(task1 -> {
+                                                    progressDialog.dismiss(); // Dismiss progress dialog
                                                     if (task1.isSuccessful()) {
-                                                        // Inform the user that their account has been deleted
                                                         Toast.makeText(EditProfile.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
-
-                                                        // Sign out the user and redirect them to the login screen
                                                         auth.signOut();
                                                         startActivity(new Intent(EditProfile.this, SignIn.class));
-                                                        finish(); // Close the EditProfile activity
+                                                        finish();
                                                     } else {
                                                         Toast.makeText(EditProfile.this, "Failed to delete account from Firebase Authentication", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                     } else {
+                                        progressDialog.dismiss();
                                         Toast.makeText(EditProfile.this, "Failed to remove user data from the database", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -220,7 +230,7 @@ public class EditProfile extends AppCompatActivity {
         // Create a PopupMenu and link it to the profile image
         PopupMenu popupMenu = new PopupMenu(EditProfile.this, view);
 
-        
+
         // Inflate the menu from a resource file
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.change_profile_menu, popupMenu.getMenu());
@@ -256,42 +266,51 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
+    private void loadBase64Image(String base64, ImageView imageView) {
+        try {
+            byte[] decodedBytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            imageView.setImageBitmap(decodedBitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void updateProfileImage() {
         if (imageUri != null) {
-            // Update the user's profile image URL in Realtime Database
-            String userId = currentUser.getUid();
-            String imageUriString = imageUri.toString();  // Store image Uri as a string
+            try {
+                // Convert image to Bitmap
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
 
-            databaseReference.child(userId).child("profileImageUrl").setValue(imageUriString)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Update the profile image in Firebase Authentication
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(imageUri)
-                                    .build();
+                // Compress and convert to Base64
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                byte[] imageBytes = baos.toByteArray();
+                String base64Image = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
 
-                            currentUser.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            // Load the new image into the ImageView
-                                            Glide.with(EditProfile.this)
-                                                    .load(imageUri)
-                                                    .circleCrop()
-                                                    .into(userProfile);
+                // 3. Save Base64 string to Realtime Database
+                String userId = currentUser.getUid();
+                databaseReference.child(userId).child("profileImageBase64").setValue(base64Image)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // 4. Show in UI immediately
+                                userProfile.setImageBitmap(bitmap);
 
-                                            // Notify AccountFragment or HomeFragment to reload the profile
-                                            Intent intent = new Intent("com.example.PROFILE_UPDATED");
-                                            sendBroadcast(intent);
+                                // Broadcast change (if used by other fragments)
+                                Intent intent = new Intent("com.example.PROFILE_UPDATED");
+                                sendBroadcast(intent);
 
-                                            Toast.makeText(EditProfile.this, "Profile Image Updated", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(EditProfile.this, "Failed to update profile image in Firebase Authentication", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(EditProfile.this, "Failed to update profile image in database", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                Toast.makeText(EditProfile.this, "Profile Image Updated", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(EditProfile.this, "Failed to update profile image", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed to process image", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -327,7 +346,9 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
-        // Update the display name in Firebase Authentication
+        progressDialog.setMessage("Saving changes...");
+        progressDialog.show();
+
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(newUsername)
                 .build();
@@ -335,19 +356,21 @@ public class EditProfile extends AppCompatActivity {
         currentUser.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Update username in Firebase Realtime Database
                         String userId = currentUser.getUid();
                         databaseReference.child(userId).child("name").setValue(newUsername)
                                 .addOnCompleteListener(task1 -> {
+                                    progressDialog.dismiss();
                                     if (task1.isSuccessful()) {
-                                        Toast.makeText(EditProfile.this, "User profile updated successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(EditProfile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(EditProfile.this, "Failed to update profile in database", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
+                        progressDialog.dismiss();
                         Toast.makeText(EditProfile.this, "Failed to update username", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 }

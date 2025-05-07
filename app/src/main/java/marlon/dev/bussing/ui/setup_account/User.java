@@ -6,11 +6,14 @@ public class User {
     String name;
     String profile;
     String email;
-    public User(String userId, String profile, String name, String email) {
+    String fcmToken;
+
+    public User(String userId, String profile, String name, String email, String fcmToken) {
         this.userId = userId;
         this.profile = profile;
         this.name = name;
         this.email = email;
+        this.fcmToken = fcmToken;
     }
 
     public User() {}
@@ -45,6 +48,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }

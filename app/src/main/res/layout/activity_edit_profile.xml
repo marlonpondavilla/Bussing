@@ -22,7 +22,7 @@
                 android:id="@+id/userProfile"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/user_img"
+                android:src="@drawable/default_user1"
                 android:scaleType="centerCrop"
                 android:gravity="center"
                 app:strokeWidth="3dp"

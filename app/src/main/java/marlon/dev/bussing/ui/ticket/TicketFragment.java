@@ -2,6 +2,7 @@ package marlon.dev.bussing.ui.ticket;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.icu.util.Calendar;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.widget.LinearLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -99,7 +103,8 @@ public class TicketFragment extends Fragment {
             String ticketNumber = generateTicketNumber();
             String passengerType = passengersDropdown.getText().toString().trim().toLowerCase();
 
-            double basePrice = (from.equalsIgnoreCase("Bulacan") && to.equalsIgnoreCase("Cubao")) ? 105.0 : 120.0;
+            // Determine base price (subtotal)
+            double basePrice = (from.equalsIgnoreCase("Bulakan") && to.equalsIgnoreCase("Cubao")) ? 105.0 : 120.0;
             double discountRate = 0.0;
 
             switch (passengerType) {
@@ -118,45 +123,60 @@ public class TicketFragment extends Fragment {
             double finalPrice = basePrice - discountAmount;
 
             showPaymentDialog(finalPrice, () -> {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                String formattedDateTime = sdf.format(new Date());
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Generating QR Code...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                String formattedPrice = String.format(Locale.getDefault(), "%.2f", finalPrice);
-                String formattedDiscount = String.format(Locale.getDefault(), "%.2f", discountAmount);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    String formattedDateTime = sdf.format(new Date());
 
-                String ticketDetails = "From: " + from + "\nTo: " + to + "\nUser: " + userName +
-                        "\nDate: " + date + "\nTime: " + formattedDateTime +
-                        "\nPassenger: " + passengerType + "\nDiscount: ₱" + formattedDiscount +
-                        "\nPrice: ₱" + formattedPrice + "\nTicket Number: " + ticketNumber;
+                    String formattedPrice = String.format(Locale.getDefault(), "%.2f", finalPrice);
+                    String formattedDiscount = String.format(Locale.getDefault(), "%.2f", discountAmount);
+                    String formattedSubtotal = String.format(Locale.getDefault(), "%.2f", basePrice);
 
-                Intent intent = new Intent(getActivity(), GenerateTicket.class);
-                intent.putExtra("from", from);
-                intent.putExtra("to", to);
-                intent.putExtra("userName", userName);
-                intent.putExtra("date", date);
-                intent.putExtra("dateTime", formattedDateTime);
-                intent.putExtra("passengerType", passengerType);
-                intent.putExtra("discountAmount", formattedDiscount);
-                intent.putExtra("price", formattedPrice);
-                intent.putExtra("ticketDetails", ticketDetails);
-                intent.putExtra("ticketNumber", ticketNumber);
+                    String ticketDetails = "From: " + from + "\nTo: " + to + "\nUser: " + userName +
+                            "\nDate: " + date + "\nTime: " + formattedDateTime +
+                            "\nPassenger: " + passengerType + "\nDiscount: ₱" + formattedDiscount +
+                            "\nSubtotal: ₱" + formattedSubtotal +
+                            "\nTotal Price: ₱" + formattedPrice +
+                            "\nTicket Number: " + ticketNumber;
 
-                saveTicketToFirestore(from, to, userName, date, formattedDateTime, passengerType, formattedDiscount, formattedPrice, ticketNumber);
+                    Intent intent = new Intent(getActivity(), GenerateTicket.class);
+                    intent.putExtra("from", from);
+                    intent.putExtra("to", to);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("date", date);
+                    intent.putExtra("dateTime", formattedDateTime);
+                    intent.putExtra("passengerType", passengerType);
+                    intent.putExtra("discountAmount", formattedDiscount);
+                    intent.putExtra("price", formattedPrice);
+                    intent.putExtra("subtotal", formattedSubtotal);
+                    intent.putExtra("ticketDetails", ticketDetails);
+                    intent.putExtra("ticketNumber", ticketNumber);
 
+                    saveTicketToFirestore(from, to, userName, date, formattedDateTime, passengerType, formattedDiscount, formattedPrice, ticketNumber, formattedSubtotal);
 
-                startActivity(intent);
+                    passengersDropdown.setText("");
+
+                    progressDialog.dismiss();
+
+                    startActivity(intent);
+                }, 2000);
             });
         });
+
 
         return view;
     }
 
     private void saveTicketToFirestore(String from, String to, String userName, String date, String dateTime,
-                                       String passengerType, String discountAmount, String finalPrice, String ticketNumber) {
+                                       String passengerType, String discountAmount, String finalPrice, String ticketNumber, String subtotal) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Map<String, Object> ticketData = new HashMap<>();
-        ticketData.put("createdAt", new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()));
+        ticketData.put("createdAt", Timestamp.now());
         ticketData.put("from", from);
         ticketData.put("to", to);
         ticketData.put("userName", userName);
@@ -164,6 +184,7 @@ public class TicketFragment extends Fragment {
         ticketData.put("bookingTime", dateTime);
         ticketData.put("passenger", passengerType);
         ticketData.put("discount", discountAmount);
+        ticketData.put("subtotal", subtotal);
         ticketData.put("price", finalPrice);
         ticketData.put("ticketCode", ticketNumber);
         ticketData.put("uid", userId);
@@ -244,35 +265,99 @@ public class TicketFragment extends Fragment {
             DocumentSnapshot walletSnapshot = transaction.get(userWalletRef);
 
             if (!walletSnapshot.exists()) {
-                Log.e("Firestore", "Wallet not found!");
                 throw new FirebaseFirestoreException("Wallet not found", FirebaseFirestoreException.Code.NOT_FOUND);
             }
 
             Double currentBalance = walletSnapshot.getDouble("balance");
-            if (currentBalance == null) {
-                Log.e("Firestore", "Balance field is missing!");
-                throw new FirebaseFirestoreException("Balance field missing", FirebaseFirestoreException.Code.DATA_LOSS);
-            }
-
-            if (currentBalance < amountToPay) {
-                Log.e("Firestore", "Insufficient balance! Current: " + currentBalance + ", Required: " + amountToPay);
+            if (currentBalance == null || currentBalance < amountToPay) {
                 throw new FirebaseFirestoreException("Insufficient balance", FirebaseFirestoreException.Code.ABORTED);
             }
 
             double newBalance = currentBalance - amountToPay;
-            Log.d("Firestore", "Updating balance. New balance: " + newBalance);
             transaction.update(userWalletRef, "balance", newBalance);
 
             return newBalance;
         }).addOnSuccessListener(newBalance -> {
-            Log.d("Firestore", "Payment successful. Proceeding to save payment record...");
+            Log.d("Firestore", "Payment successful. Proceeding to save transaction...");
+
+            String from = departureDropdown.getText().toString();
+            String to = arrivalDropdown.getText().toString();
+
+            deductBalance(amountToPay); // Call function to save the deduction
             savePaymentRecord(userId, amountToPay);
-            onPaymentSuccess.run();  // Proceed to generate ticket
+            saveWalletTransaction(userId, amountToPay);
+
+            onPaymentSuccess.run(); // Proceed to generate ticket
         }).addOnFailureListener(e -> {
             Log.e("Firestore", "Payment failed: " + e.getMessage(), e);
             Snackbar.make(qrCodeButton, e.getMessage(), Snackbar.LENGTH_LONG).show();
         });
     }
+
+    private void deductBalance(double amount) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference walletRef = db.collection("UserWalletsCollection").document(userId);
+
+        walletRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists() && documentSnapshot.contains("balance")) {
+                double currentBalance = documentSnapshot.getDouble("balance");
+                if (currentBalance >= amount) {
+                    double newBalance = currentBalance - amount;
+                    String dateTime = new SimpleDateFormat("HH:mm ddMMMyy", Locale.getDefault()).format(new Date());
+
+                    db.runTransaction(transaction -> {
+                        transaction.update(walletRef, "balance", newBalance);
+                        return null;
+                    }).addOnSuccessListener(aVoid -> {
+
+                        Map<String, Object> transactionData = new HashMap<>();
+                        transactionData.put("userActivity", "You booked a ticket from");
+                        transactionData.put("transactionPrice", -amount);
+                        transactionData.put("transactionTimeStamp", dateTime);
+                        transactionData.put("userId", "Bussing");
+
+                        walletRef.collection("transactions").add(transactionData)
+                                .addOnSuccessListener(documentReference ->
+                                        Log.d("Firestore", "Transaction stored successfully"))
+                                .addOnFailureListener(e ->
+                                        Log.e("Firestore", "Error storing transaction", e));
+
+                        Snackbar.make(qrCodeButton, "Payment Successful! Ticket booked.", Snackbar.LENGTH_LONG).show();
+                    }).addOnFailureListener(e ->
+                            Snackbar.make(qrCodeButton, "Failed to deduct balance", Snackbar.LENGTH_LONG).show());
+                } else {
+                    Snackbar.make(qrCodeButton, "Insufficient Balance!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        }).addOnFailureListener(e ->
+                Snackbar.make(qrCodeButton, "Failed to retrieve wallet balance", Snackbar.LENGTH_LONG).show());
+    }
+
+
+    private void saveWalletTransaction(String userId, double amountPaid) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm ddMMMyy", Locale.getDefault());
+        String dateTime = sdf.format(new Date());
+
+        String departure = departureDropdown.getText().toString();
+        String arrival = arrivalDropdown.getText().toString();
+
+        Map<String, Object> transactionData = new HashMap<>();
+        transactionData.put("userId", userId);
+        transactionData.put("userActivity", "You booked a ticket from " + departure + " to " + arrival);
+        transactionData.put("transactionPrice", -amountPaid);
+        transactionData.put("transactionTimeStamp", dateTime);
+
+        db.collection("UserWalletTransactions")
+                .add(transactionData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Transaction recorded successfully! ID: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Failed to record transaction", e);
+                });
+    }
+
 
 
     private void savePaymentRecord(String userId, double amountPaid) {
@@ -349,7 +434,11 @@ public class TicketFragment extends Fragment {
                     String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
                     dateInput.setText(formattedDate);
                 },
-                year, month, dayOfMonth);
+                year, month, dayOfMonth
+        );
+
+        // Disable past dates
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
 
         datePickerDialog.show();
     }

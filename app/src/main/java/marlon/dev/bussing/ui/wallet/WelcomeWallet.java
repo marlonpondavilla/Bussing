@@ -1,5 +1,6 @@
 package marlon.dev.bussing.ui.wallet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -10,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -17,8 +20,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import marlon.dev.bussing.R;
 
@@ -28,6 +29,7 @@ public class WelcomeWallet extends AppCompatActivity {
     TextView name;
     MaterialButton continueBtn;
     FirebaseAuth auth;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class WelcomeWallet extends AppCompatActivity {
         name = findViewById(R.id.userName);
         password = findViewById(R.id.passwordTextInput);
         continueBtn = findViewById(R.id.continueButton);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Verifying...");
+        progressDialog.setCancelable(false);
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -65,6 +70,8 @@ public class WelcomeWallet extends AppCompatActivity {
             return;
         }
 
+        progressDialog.show(); // Show loader
+
         boolean isGoogleUser = false;
         if (user.getProviderData().size() > 1) {
             String provider = user.getProviderData().get(1).getProviderId();
@@ -72,10 +79,8 @@ public class WelcomeWallet extends AppCompatActivity {
         }
 
         if (isGoogleUser) {
-            // Re-authenticate using Google credentials
             reauthenticateWithGoogle(user);
         } else {
-            // Re-authenticate using email & password
             verifyPassword(user);
         }
     }
@@ -85,15 +90,18 @@ public class WelcomeWallet extends AppCompatActivity {
 
         if (enteredPassword.isEmpty()) {
             password.setError("Enter your password");
+            progressDialog.dismiss(); // Dismiss loader
             return;
         }
 
         auth.signInWithEmailAndPassword(user.getEmail(), enteredPassword)
                 .addOnSuccessListener(authResult -> {
+                    progressDialog.dismiss(); // Dismiss loader
                     showSnackbar("Access Granted!");
                     navigateToWallet();
                 })
                 .addOnFailureListener(e -> {
+                    progressDialog.dismiss(); // Dismiss loader
                     password.setError("Incorrect password");
                     showSnackbar("Invalid password!");
                 });
@@ -109,16 +117,20 @@ public class WelcomeWallet extends AppCompatActivity {
                 AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
                 user.reauthenticate(credential)
                         .addOnSuccessListener(unused -> {
+                            progressDialog.dismiss();
                             showSnackbar("Google re-authentication successful!");
                             navigateToWallet();
                         })
                         .addOnFailureListener(e -> {
+                            progressDialog.dismiss();
                             showSnackbar("Google re-authentication failed!");
                         });
             } else {
+                progressDialog.dismiss();
                 showSnackbar("Google ID token is null. Please sign in again.");
             }
         } else {
+            progressDialog.dismiss();
             showSnackbar("No Google account found. Please sign in again.");
         }
     }
@@ -126,7 +138,7 @@ public class WelcomeWallet extends AppCompatActivity {
     private void navigateToWallet() {
         Intent intent = new Intent(WelcomeWallet.this, UserWallet.class);
         startActivity(intent);
-        finish(); // Close WelcomeWallet to prevent going back
+        finish();
     }
 
     private void showSnackbar(String message) {
