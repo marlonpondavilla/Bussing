@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.button.MaterialButton;
@@ -53,6 +54,7 @@ public class TicketFragment extends Fragment {
     private EditText dateInput;
     private MaterialButton qrCodeButton;
     private FirebaseFirestore db;
+    private ImageView switchRouteButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -64,6 +66,7 @@ public class TicketFragment extends Fragment {
         passengersDropdown = view.findViewById(R.id.passengersDropDown);
         dateInput = view.findViewById(R.id.dateInput);
         qrCodeButton = view.findViewById(R.id.qrCodeButton);
+        switchRouteButton = view.findViewById(R.id.switchRoute);
 
         db = FirebaseFirestore.getInstance();
 
@@ -81,6 +84,22 @@ public class TicketFragment extends Fragment {
         passengersDropdown.setAdapter(passengersAdapter);
 
         dateInput.setOnClickListener(v -> showDatePickerDialog());
+
+        switchRouteButton.setOnClickListener(v -> {
+            String departure = departureDropdown.getText().toString();
+            String arrival = arrivalDropdown.getText().toString();
+
+            // Swap route
+            departureDropdown.setText(arrival, false);
+            arrivalDropdown.setText(departure, false);
+
+            // Rotate icon
+            switchRouteButton.animate()
+                    .rotationBy(180f)
+                    .setDuration(300)
+                    .start();
+        });
+
 
         qrCodeButton.setOnClickListener(v -> {
             if (!isFormValid()) {

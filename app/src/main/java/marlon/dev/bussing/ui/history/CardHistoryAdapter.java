@@ -238,9 +238,37 @@ public class CardHistoryAdapter extends RecyclerView.Adapter<CardHistoryAdapter.
                     notifyDataSetChanged();
 
                     if (callback != null) {
-                        callback.run(); // Notify HistoryFragment to check visibility
+                        callback.run();
                     }
                 });
+    }
+
+    private static final SimpleDateFormat parseFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+
+    public void sortByDateDescending() {
+        cardHistoryListsArrayList.sort((o1, o2) -> {
+            try {
+                return parseFormat.parse(o2.getTransactionTimeStamp())
+                        .compareTo(parseFormat.parse(o1.getTransactionTimeStamp()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        });
+        notifyDataSetChanged();
+    }
+
+    public void sortByDateAscending() {
+        cardHistoryListsArrayList.sort((o1, o2) -> {
+            try {
+                return parseFormat.parse(o1.getTransactionTimeStamp())
+                        .compareTo(parseFormat.parse(o2.getTransactionTimeStamp()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        });
+        notifyDataSetChanged();
     }
 
 

@@ -107,6 +107,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
+                    android:id="@+id/switchRoute"
                     android:backgroundTint="#133ac2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

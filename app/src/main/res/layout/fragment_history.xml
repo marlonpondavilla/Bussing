@@ -85,4 +85,15 @@
         android:layout_marginTop="180dp"
         android:nestedScrollingEnabled="false" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sortButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="30dp"
+        android:backgroundTint="#384146"
+        app:srcCompat="@drawable/sort"
+        app:tint="#f9f9f9"
+        app:maxImageSize="28dp"/>
+
 </FrameLayout>
