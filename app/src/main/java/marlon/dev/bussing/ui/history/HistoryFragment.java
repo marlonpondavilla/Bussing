@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,6 +37,7 @@ public class HistoryFragment extends Fragment {
     private ImageView noTransactionImage;
     private TextView noTransactionText, noTransactionSubText;
     private Button deleteBtn;
+    private FloatingActionButton sortButton;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -47,6 +50,7 @@ public class HistoryFragment extends Fragment {
 
 
         recyclerView = view.findViewById(R.id.recyclerView);
+        sortButton = view.findViewById(R.id.sortButton);
 
         noTransactionImage = view.findViewById(R.id.noTransactionImage);
         noTransactionText = view.findViewById(R.id.noTransactionText);
@@ -67,10 +71,28 @@ public class HistoryFragment extends Fragment {
             cardHistoryAdapter.deleteSelectedItems();
         });
 
+        sortButton.setOnClickListener(v -> {
+            showSortOptions();
+        });
 
         return view;
     }
 
+    private void showSortOptions() {
+        String[] options = {"Latest to Oldest", "Oldest to Latest"};
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Sort History")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        // Latest to Oldest
+                        cardHistoryAdapter.sortByDateDescending();
+                    } else {
+                        // Oldest to Latest
+                        cardHistoryAdapter.sortByDateAscending();
+                    }
+                })
+                .show();
+    }
 
 
     private void checkTransactionVisibility() {

@@ -1,8 +1,14 @@
 package marlon.dev.bussing;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.navigation.NavController;
@@ -20,10 +26,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(!isConnected()) {
+            showNoInternetDialog();
+            return;
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Set up the Toolbar as ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,5 +75,24 @@ public class MainActivity extends AppCompatActivity {
         if (!isBackPressedOnce) {
             super.onBackPressed();
         }
+    }
+
+    //INTERNET CONNECTION
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
+        return false;
+    }
+
+    private void showNoInternetDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("No internet Connection")
+                .setMessage("You need an internet connection to use this app.")
+                .setCancelable(false)
+                .setPositiveButton("Exit", (dialog, which) -> finish())
+                .show();
     }
 }
