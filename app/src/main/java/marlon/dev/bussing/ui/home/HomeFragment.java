@@ -114,13 +114,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             bottomNavigationView.setSelectedItemId(R.id.navigation_ticket);
         });
 
-
-//        if (book != null) {
-//            book.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_blue, null)));
-//        } else {
-//            Log.e("HomeFragment", "bookButton is null!");
-//        }
-
         return view;
     }
 
