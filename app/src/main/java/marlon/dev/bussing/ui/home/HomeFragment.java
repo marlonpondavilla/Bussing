@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -41,6 +43,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import marlon.dev.bussing.R;
 import marlon.dev.bussing.ui.account.AccountFragment;
+import marlon.dev.bussing.ui.ticket.TicketFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private ArrayList<CardLists> cardLists = new ArrayList<>();
     private RecyclerView recyclerView;
+    private RecyclerView staticRecyclerView;
     private CardAdapter cardAdapter;
     private FirebaseFirestore db;
     private ListenerRegistration listenerRegistration;
@@ -59,7 +63,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView appBarUsername;
     private TextView appBarEmail;
     private TextView userNameTextView;
-    private Button book;
+    private Button bookNow;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -70,6 +74,18 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        staticRecyclerView = view.findViewById(R.id.recyclerViewHorizontal);
+        staticRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        ArrayList<ItemLists> itemLists = new ArrayList<>();
+        itemLists.add(new ItemLists("Book Your Ride in Seconds—Anytime, Anywhere.", R.drawable.bus, "#FFB13D"));
+        itemLists.add(new ItemLists("Your Journey Starts with One Tap.", R.drawable.one_tap, "#2FDBFA"));
+        itemLists.add(new ItemLists("Skip the Lines. Pay in Seconds.", R.drawable.easy_payment, "#2097FF"));
+        itemLists.add(new ItemLists("Get exclusive discounts every trip.", R.drawable.bus2, "#9FE087"));
+
+        ItemAdapter staticAdapter = new ItemAdapter(getContext(), itemLists);
+        staticRecyclerView.setAdapter(staticAdapter);
 
         db = FirebaseFirestore.getInstance();
         cardAdapter = new CardAdapter(getContext(), cardLists);
@@ -83,7 +99,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         appBarUsername = view.findViewById(R.id.appbarUsername);
         appBarEmail = view.findViewById(R.id.appbarEmail);
         userNameTextView = view.findViewById(R.id.userName);
-        book = view.findViewById(R.id.bookButton);
+        bookNow = view.findViewById(R.id.bookNow);
         swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -93,14 +109,34 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         fetchDataFromFireStore();
 
-        if (book != null) {
-            book.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_blue, null)));
-        } else {
-            Log.e("HomeFragment", "bookButton is null!");
-        }
+        bookNow.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.nav_view);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_ticket);
+        });
+
+
+//        if (book != null) {
+//            book.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_blue, null)));
+//        } else {
+//            Log.e("HomeFragment", "bookButton is null!");
+//        }
 
         return view;
     }
+
+    private void removeCardById(String documentId) {
+        for (int i = 0; i < cardLists.size(); i++) {
+            CardLists card = cardLists.get(i);
+            // Extract bus number from documentId logic if needed
+            String expectedBusNum = "BUS" + documentId;
+
+            if (card.getBusNumber().equals(expectedBusNum)) {
+                cardLists.remove(i);
+                break;
+            }
+        }
+    }
+
 
     @Override
     public void onRefresh() {
@@ -127,37 +163,42 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                         cardLists.clear();
                         for (DocumentChange doc : value.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED ||
-                                    doc.getType() == DocumentChange.Type.MODIFIED) {
+                            String id = doc.getDocument().getId();
 
-                                String id = doc.getDocument().getId();
-                                String arrivalPoint = doc.getDocument().getString("arrivalPoint");
-                                String busNumber = "BUS" + doc.getDocument().getString("busNo");
-                                String fromLocation = doc.getDocument().getString("startingPoint");
-                                String currentLocation = doc.getDocument().getString("startingPoint");
-                                String departureTime = doc.getDocument().getString("departureTime");
-                                String driver = doc.getDocument().getString("busDriver");
-                                String conductor = doc.getDocument().getString("busConductor");
-                                String status = doc.getDocument().getString("status");
+                            switch (doc.getType()) {
+                                case ADDED:
+                                case MODIFIED:
+                                    removeCardById(id);
 
-                                // Safe parsing of busCapacity
-                                Object capacityObj = doc.getDocument().get("busCapacity");
-                                int capacity = 0; // Default value in case of errors
+                                    // Extract and add
+                                    String arrivalPoint = doc.getDocument().getString("arrivalPoint");
+                                    String busNumber = "BUS" + doc.getDocument().getString("busNo");
+                                    String fromLocation = doc.getDocument().getString("startingPoint");
+                                    String currentLocation = doc.getDocument().getString("startingPoint");
+                                    String departureTime = doc.getDocument().getString("departureTime");
+                                    String driver = doc.getDocument().getString("busDriver");
+                                    String conductor = doc.getDocument().getString("busConductor");
+                                    String status = doc.getDocument().getString("status");
 
-                                if (capacityObj instanceof Number) {
-                                    capacity = ((Number) capacityObj).intValue(); // Convert safely
-                                } else if (capacityObj instanceof String) {
-                                    try {
-                                        capacity = Integer.parseInt((String) capacityObj);
-                                    } catch (NumberFormatException e) {
-                                        Log.e("Firestore Error", "Invalid busCapacity value: " + capacityObj);
+                                    Object capacityObj = doc.getDocument().get("busCapacity");
+                                    int capacity = 0;
+                                    if (capacityObj instanceof Number) {
+                                        capacity = ((Number) capacityObj).intValue();
+                                    } else if (capacityObj instanceof String) {
+                                        try {
+                                            capacity = Integer.parseInt((String) capacityObj);
+                                        } catch (NumberFormatException e) {
+                                            Log.e("Firestore Error", "Invalid busCapacity: " + capacityObj);
+                                        }
                                     }
-                                } else {
-                                    Log.e("Firestore Error", "Unexpected busCapacity type: " + capacityObj);
-                                }
 
-                                cardLists.add(new CardLists(busNumber, fromLocation, arrivalPoint, R.drawable.bus_front,
-                                        currentLocation, departureTime, driver, conductor, capacity, 0, status));
+                                    cardLists.add(new CardLists(busNumber, fromLocation, arrivalPoint, R.drawable.bus_front,
+                                            currentLocation, departureTime, driver, conductor, capacity, 0, status));
+                                    break;
+
+                                case REMOVED:
+                                    removeCardById(id);
+                                    break;
                             }
                         }
                         cardAdapter.notifyDataSetChanged();

@@ -61,7 +61,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             capacity = view.findViewById(R.id.capacity);
             price = view.findViewById(R.id.price);
             status = view.findViewById(R.id.status);
-            bookButton = view.findViewById(R.id.bookButton);
+//            bookButton = view.findViewById(R.id.bookButton);
         }
     }
 
@@ -104,7 +104,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         LinearLayout detailsLayout = holder.itemView.findViewById(R.id.details);
         ImageView dropdownImage = holder.itemView.findViewById(R.id.dropdown);
-        holder.bookButton = holder.itemView.findViewById(R.id.bookButton);
+//        holder.bookButton = holder.itemView.findViewById(R.id.bookButton);
 
         // Initially hide details
         detailsLayout.setVisibility(View.GONE);
@@ -150,40 +150,40 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         });
 
         // Disable Book button if bus is inactive
-        if (!"active".equalsIgnoreCase(cardLists.getStatus())) {
-            holder.bookButton.setEnabled(false);
-            holder.bookButton.setAlpha(1.0f);
-            holder.bookButton.setTextColor(Color.parseColor("#1e2336"));
-        } else {
-            holder.bookButton.setEnabled(true);
-            holder.bookButton.setAlpha(1.0f);
-        }
+//        if (!"active".equalsIgnoreCase(cardLists.getStatus())) {
+//            holder.bookButton.setEnabled(false);
+//            holder.bookButton.setAlpha(1.0f);
+//            holder.bookButton.setTextColor(Color.parseColor("#1e2336"));
+//        } else {
+//            holder.bookButton.setEnabled(true);
+//            holder.bookButton.setAlpha(1.0f);
+//        }
 
         // Handle Book button click
-        holder.bookButton.setOnClickListener(v -> {
-            if ("active".equalsIgnoreCase(cardLists.getStatus())) {
-                Bundle bundle = new Bundle();
-                bundle.putString("from", cardLists.getFromLocation());
-                bundle.putString("to", cardLists.getToWhereLocation());
-
-                TicketFragment ticketFragment = new TicketFragment();
-                ticketFragment.setArguments(bundle);
-
-                FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.homeFragment, ticketFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-                //change button nav
-                FragmentActivity activity = (FragmentActivity) context;
-                if (activity != null) {
-                    BottomNavigationView bottomNavigationView = activity.findViewById(R.id.nav_view);
-                    if (bottomNavigationView != null) {
-                        bottomNavigationView.setSelectedItemId(R.id.navigation_ticket);
-                    }
-                }
-            }
-        });
+//        holder.bookButton.setOnClickListener(v -> {
+//            if ("active".equalsIgnoreCase(cardLists.getStatus())) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString("from", cardLists.getFromLocation());
+//                bundle.putString("to", cardLists.getToWhereLocation());
+//
+//                TicketFragment ticketFragment = new TicketFragment();
+//                ticketFragment.setArguments(bundle);
+//
+//                FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.homeFragment, ticketFragment);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//
+//                //change button nav
+//                FragmentActivity activity = (FragmentActivity) context;
+//                if (activity != null) {
+//                    BottomNavigationView bottomNavigationView = activity.findViewById(R.id.nav_view);
+//                    if (bottomNavigationView != null) {
+//                        bottomNavigationView.setSelectedItemId(R.id.navigation_ticket);
+//                    }
+//                }
+//            }
+//        });
     }
 
 

@@ -271,19 +271,21 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:background="@drawable/account_bg">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Status: "
-                        android:textSize="16dp"
-                        android:textColor="#133AC1"
-                        android:fontFamily="@font/nunito_semibold"
+                        android:textSize="18dp"
+                        android:textColor="#f9f9f9"
+                        android:fontFamily="@font/nunito_bold"
                         />
 
                     <TextView
@@ -292,21 +294,21 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="--"
-                        android:textSize="16dp"
-                        android:textColor="#133AC1"
-                        android:fontFamily="@font/nunito_semibold"
+                        android:textSize="18dp"
+                        android:textColor="#f9f9f9"
+                        android:fontFamily="@font/nunito_bold"
                         />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/bookButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Book"
-                    android:textColor="#f9f9f9"
-                    android:fontFamily="@font/nunito_bold"
-                    android:background="@drawable/account_bg" />
+<!--                <Button-->
+<!--                    android:id="@+id/bookButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:text="Book"-->
+<!--                    android:textColor="#f9f9f9"-->
+<!--                    android:fontFamily="@font/nunito_bold"-->
+<!--                    android:background="@drawable/account_bg" />-->
 
             </LinearLayout>
 

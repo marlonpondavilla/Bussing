@@ -202,6 +202,7 @@
                     app:cornerRadius="10dp"
                     app:icon="@drawable/qr_code_"
                     app:iconGravity="textStart"
+                    app:iconTint="#f9f9f9"
                     app:iconPadding="8dp"
                     app:iconSize="24dp" />
 
