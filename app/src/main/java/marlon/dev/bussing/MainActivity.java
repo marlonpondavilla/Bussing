@@ -2,6 +2,7 @@ package marlon.dev.bussing;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private boolean isBackPressedOnce = false;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

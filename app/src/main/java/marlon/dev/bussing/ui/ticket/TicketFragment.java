@@ -186,7 +186,6 @@ public class TicketFragment extends Fragment {
             });
         });
 
-
         return view;
     }
 

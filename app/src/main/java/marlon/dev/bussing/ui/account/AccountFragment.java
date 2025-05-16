@@ -2,6 +2,7 @@ package marlon.dev.bussing.ui.account;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class AccountFragment extends Fragment {
 
     private TextView usernameTextView;
     private TextView emailTextView;
+    private TextView versionText;
     private com.google.android.material.imageview.ShapeableImageView profileImageView;
     private Button signOutButton, editProfile, walletBtn;
     private FirebaseAuth auth;
@@ -59,6 +61,20 @@ public class AccountFragment extends Fragment {
         signOutButton = root.findViewById(R.id.signOutButton);
         editProfile = root.findViewById(R.id.editProfileButton);
         walletBtn = root.findViewById(R.id.walletButton);
+        versionText = root.findViewById(R.id.versionText);
+
+        try {
+            String versionName = getActivity()
+                    .getPackageManager()
+                    .getPackageInfo(getActivity().getPackageName(), 0)
+                    .versionName;
+
+            versionText.setText("Version " + versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            versionText.setText("Version N/A");
+        }
+
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Signing out...");

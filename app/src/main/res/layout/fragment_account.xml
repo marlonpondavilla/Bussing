@@ -148,4 +148,15 @@
         android:layout_marginRight="20dp"
         android:background="#87A0F8" />
 
+    <TextView
+        android:id="@+id/versionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:text="Version"
+        android:textSize="14dp"
+        android:fontFamily="@font/nunito_semibold" />
+
 </FrameLayout>
